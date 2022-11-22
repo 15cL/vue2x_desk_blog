@@ -1,27 +1,97 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import Router from 'vue-router'
 
-Vue.use(VueRouter)
+Vue.use(Router)
+
+// 主页面导航路由
+export const uRoutes = [
+
+  {
+    path: 'article',
+    name: 'article',
+    component: () => import('@/views/article/articlePage.vue'),
+    meta: {
+      title: '文章管理'
+    },
+    children: [
+      {
+        path: 'list',
+        name: 'list',
+        component: () => import('@/views/article/list/listPage.vue'),
+        meta: {
+          title: '文章列表'
+        }
+      },
+      {
+        path: 'tag',
+        name: 'tag',
+        component: () => import('@/views/article/tag/tagPage.vue'),
+        meta: {
+          title: '标签云'
+        }
+      }
+    ]
+  },
+  {
+    path: 'user',
+    name: 'user',
+    component: () => import('@/views/user/userPage.vue'),
+    meta: { title: '个人中心' },
+    children: [
+      {
+        path: 'userinfo',
+        name: 'userinfo',
+        component: () => import('@/views/user/userinfo/userinfoPage.vue'),
+        meta: { title: '个人信息' }
+      },
+      {
+        path: 'pwd',
+        name: 'pwd',
+        component: () => import('@/views/user/repwd/repwdPage.vue'),
+        meta: { title: '重置密码' }
+      }]
+  }
+]
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    redirect: '/home'
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/login/loginPage.vue')
+  },
+  {
+    path: '/home',
+    component: () => import('@/views/home/homePage.vue'),
+    children: [...uRoutes]
   }
 ]
 
-const router = new VueRouter({
-  routes
-})
+// 路由配置
+const RouterConfig = {
+  // mode: 'history', // require service support
+  scrollBehavior: () => ({
+    y: 0
+  }),
+  routes: routes
+}
+
+// 防止重复点击
+const originalPush = Router.prototype.push
+Router.prototype.push = function push (location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
+// export const router = new Router(RouterConfig)
+const createRouter = () => new Router(RouterConfig)
+
+// 创建路由实例
+const router = createRouter()
+
+// 添加动态路由
+// addAsyncRouter()
 
 export default router
