@@ -66,6 +66,7 @@
               <el-tag
                 v-for="tag of tags"
                 :key="tag.id"
+                type="success"
                 style="margin: 0.1rem"
                 >{{ tag.name }}</el-tag
               >
