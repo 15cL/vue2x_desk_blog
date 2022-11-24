@@ -9,12 +9,25 @@
           <el-table-column prop="createdate" label="创建日期"></el-table-column>
           <el-table-column prop="name" label="标题"></el-table-column>
           <el-table-column prop="author" label="作者"></el-table-column>
+             <el-table-column prop="cate_id" label="分类">
+            <template slot-scope="scope">
+              <span v-if="JSON.parse(scope.row.cate_id)">
+                <el-tag
+                  v-for="cate of tag(jsonCate,scope.row.cate_id)"
+                  :key="cate.id"
+                  style="margin: 0.1rem"
+                  >{{ cate.name }}</el-tag
+                >
+              </span>
+              <span v-else>无</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="tag_id" label="标签">
             <template slot-scope="scope">
               <span v-if="JSON.parse(scope.row.tag_id)">
                 <el-tag
                   type="success"
-                  v-for="tag of tag(scope.row.tag_id)"
+                  v-for="tag of tag(jsonTag,scope.row.tag_id)"
                   :key="tag.id"
                   style="margin: 0.1rem"
                   >{{ tag.name }}</el-tag
@@ -42,16 +55,20 @@
           <list-detail
             v-if="title == '文章详情'"
             :selectList="selectList"
+            :tags='tags'
+            :cates='cates'
           ></list-detail>
           <list-update
             v-if="title == '编辑文章'"
             :list="selectList"
             @cancel="cancel"
             :tags="jsonTag"
+            :cates='jsonCate'
           ></list-update>
           <list-add
             v-if="title == '新增文章'"
             :tags="jsonTag"
+            :cates='jsonCate'
             @cancel="cancel"
           ></list-add>
         </el-dialog>
@@ -79,12 +96,17 @@ export default {
       selectList: [],
       dialogFormVisible: false,
       title: null,
-      jsonTag: ''
+      jsonTag: '',
+      jsonCate: '',
+      cates: '',
+      tags: ''
     }
   },
   async created () {
     this.jsonTag = window.localStorage.getItem('json_tag')
+    this.jsonCate = window.localStorage.getItem('json_cate')
     await this.getList()
+    this.cates =
     this.loading = false
   },
   methods: {
@@ -98,6 +120,8 @@ export default {
     },
     // 打开文章详情弹窗
     show (row) {
+      this.tags = this.tag(this.jsonTag, row.tag_id)
+      this.cates = this.tag(this.jsonCate, row.cate_id)
       this.dialogFormVisible = true
       this.selectList = row
       this.title = '文章详情'
@@ -128,11 +152,11 @@ export default {
     },
 
     // 获取tags
-    tag (ids) {
+    tag (name, ids) {
       const id = JSON.parse(ids)
       const tagArr = []
       id.forEach((v) => {
-        JSON.parse(this.jsonTag).forEach((m) => {
+        JSON.parse(name).forEach((m) => {
           if (m.id === v) {
             tagArr.push(m)
           }

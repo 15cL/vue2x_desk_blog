@@ -46,8 +46,31 @@
       </el-row>
       <el-row>
         <el-col :span="6">
+          <el-form-item label="分类">
+            <span v-if="cates">
+              <el-tag
+                v-for="cate of cates"
+                :key="cate.id"
+                style="margin: 0.1rem"
+                >{{ cate.name }}</el-tag
+              >
+            </span>
+            <span v-else>无</span>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="6">
           <el-form-item label="标签">
-            <el-input :value="selectList.traffic" disabled></el-input>
+            <span v-if="tags">
+              <el-tag
+                v-for="tag of tags"
+                :key="tag.id"
+                style="margin: 0.1rem"
+                >{{ tag.name }}</el-tag
+              >
+            </span>
+            <span v-else>无</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -64,9 +87,8 @@
 
 <script>
 export default {
-  props: ['selectList']
+  props: ['selectList', 'cates', 'tags']
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -30,6 +30,20 @@
           </el-form-item>
         </el-col>
       </el-row>
+        <el-row>
+        <el-col>
+          <el-form-item label="分类">
+            <el-checkbox-group v-model="selectList.cate_id">
+              <el-checkbox-button
+                v-for="cate of allCates"
+                :key="cate.id"
+                :label="cate.name"
+                name="type"
+              ></el-checkbox-button>
+            </el-checkbox-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-row>
         <el-col>
           <el-form-item label="标签">
@@ -63,7 +77,7 @@ export default {
   components: {
     avatarUpload
   },
-  props: ['tags'],
+  props: ['tags', 'cates'],
   data () {
     return {
       selectList: {
@@ -73,6 +87,7 @@ export default {
         unquote: '',
         detail: '',
         tag_id: [],
+        cate_id: [],
         traffic: '',
         id: '',
         raw: '',
@@ -88,11 +103,13 @@ export default {
           { required: 'true', trigger: 'blur', message: '内容不能为空' }
         ]
       },
-      allTags: []
+      allTags: [],
+      allCates: []
     }
   },
   created () {
     this.allTags = JSON.parse(this.tags) // 列出所有的tag
+    this.allCates = JSON.parse(this.cates) // 列出所有的tag
   },
   methods: {
     ...mapActions(['article/addArticle', 'user/reAvatar']),
@@ -133,6 +150,18 @@ export default {
         arr = null
       }
       this.selectList.tag_id = JSON.stringify(arr)
+      let arr2 = []
+      this.selectList.cate_id.forEach((v) => {
+        this.allCates.forEach((m) => {
+          if (m.name === v) {
+            arr2.push(m.id)
+          }
+        })
+      })
+      if (!arr2.length) {
+        arr2 = null
+      }
+      this.selectList.cate_id = JSON.stringify(arr2)
       this['article/addArticle'](this.selectList)
       location.reload()
       this.cancel()

@@ -1,6 +1,6 @@
 <template>
   <div class="list_detail">
-      <avatarUpload
+    <avatarUpload
       style="margin: 0rem 5rem 3rem"
       @provideRaw="sendPic"
       :picUrl="imgUrl"
@@ -43,6 +43,20 @@
       </el-row>
       <el-row>
         <el-col>
+          <el-form-item label="分类">
+            <el-checkbox-group v-model="selectList.cate_id">
+              <el-checkbox-button
+                v-for="cate of allCates"
+                :key="cate.id"
+                :label="cate.name"
+                name="type"
+              ></el-checkbox-button>
+            </el-checkbox-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col>
           <el-form-item label="标签">
             <el-checkbox-group v-model="selectList.tag_id">
               <el-checkbox-button
@@ -70,7 +84,7 @@ export default {
   components: {
     avatarUpload
   },
-  props: ['list', 'tags'],
+  props: ['list', 'tags', 'cates'],
   data () {
     return {
       selectList: {
@@ -84,7 +98,8 @@ export default {
         id: '',
         article_avatar: ''
       },
-      allTags: []
+      allTags: [],
+      allCates: []
     }
   },
   computed: {
@@ -95,6 +110,7 @@ export default {
   created () {
     this.selectList = { ...this.list }
     this.getDefaultTag()
+    this.getDefaultCate()
   },
   methods: {
     ...mapActions(['article/updateArticle']),
@@ -105,6 +121,21 @@ export default {
       this.selectList.tag_id = null
     },
 
+    getDefaultCate () {
+      this.allCates = JSON.parse(this.cates) // 列出所有的tag
+      const Idarr = JSON.parse(this.selectList.cate_id) // 获取已选中的id
+      const arr = []
+      const _this = this
+
+      if (Idarr) {
+        // 遍历获取默认标签
+        Idarr.forEach((v) => {
+          const index = _this.allCates.findIndex((m) => m.id === v)
+          arr.push(_this.allCates[index].name)
+        })
+      }
+      this.selectList.cate_id = arr
+    },
     // 获取默认选中的标签
     getDefaultTag () {
       this.allTags = JSON.parse(this.tags) // 列出所有的tag
@@ -114,8 +145,8 @@ export default {
 
       if (Idarr) {
         // 遍历获取默认标签
-        Idarr.forEach(v => {
-          const index = _this.allTags.findIndex(m => m.id === v)
+        Idarr.forEach((v) => {
+          const index = _this.allTags.findIndex((m) => m.id === v)
           arr.push(_this.allTags[index].name)
         })
       }
@@ -127,6 +158,7 @@ export default {
       // 选择的标签
       const _this = this
       const tagId = []
+      const cateId = []
       if (this.selectList.tag_id) {
         this.selectList.tag_id.forEach((v) => {
           const has = _this.allTags.findIndex((m) => m.name === v)
@@ -136,6 +168,17 @@ export default {
           this.selectList.tag_id = JSON.stringify(null)
         } else {
           this.selectList.tag_id = JSON.stringify(tagId)
+        }
+      }
+      if (this.selectList.cate_id) {
+        this.selectList.cate_id.forEach((v) => {
+          const has = _this.allCates.findIndex((m) => m.name === v)
+          cateId.push(this.allCates[has].id)
+        })
+        if (!cateId.length) {
+          this.selectList.cate_id = JSON.stringify(null)
+        } else {
+          this.selectList.cate_id = JSON.stringify(cateId)
         }
       }
       const res = await this['article/updateArticle'](this.selectList)
@@ -155,5 +198,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
