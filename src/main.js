@@ -9,6 +9,16 @@ import '@/permission'
 import '@/assets/css/base.scss'
 import '@/assets/icon/iconfont.scss'
 
+// 引入mavonEditor
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+
+import ELEMENT from 'element-ui'
+Vue.use(mavonEditor)
+
+// 解决el-dialog打开弹框时的抖动
+ELEMENT.Dialog.props.lockScroll.default = false
+
 Vue.config.productionTip = false
 
 new Vue({

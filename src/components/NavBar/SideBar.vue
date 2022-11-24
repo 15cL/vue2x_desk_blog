@@ -8,7 +8,7 @@
       router
       @open="handleOpen"
       @close="handleClose"
-      style="min-width: 200px; overflow: hidden;height:100vh"
+      style="min-width: 200px;height:100vh"
     >
       <SideBarItem :allRoutes="allRoutes"></SideBarItem>
     </el-menu>

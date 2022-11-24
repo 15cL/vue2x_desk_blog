@@ -37,6 +37,7 @@
           width="80rem"
           :title="title"
           :visible.sync="dialogFormVisible"
+          top="2rem"
         >
           <list-detail
             v-if="title == '文章详情'"
@@ -48,7 +49,11 @@
             @cancel="cancel"
             :tags="jsonTag"
           ></list-update>
-          <list-add v-if="title == '新增文章'" :tags="jsonTag" @cancel="cancel"></list-add>
+          <list-add
+            v-if="title == '新增文章'"
+            :tags="jsonTag"
+            @cancel="cancel"
+          ></list-add>
         </el-dialog>
       </div>
     </el-card>
@@ -121,6 +126,7 @@ export default {
       this.dialogFormVisible = false
       this.title = null
     },
+
     // 获取tags
     tag (ids) {
       const id = JSON.parse(ids)

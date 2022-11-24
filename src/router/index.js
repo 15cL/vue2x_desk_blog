@@ -5,7 +5,6 @@ Vue.use(Router)
 
 // 主页面导航路由
 export const uRoutes = [
-
   {
     path: 'article',
     name: 'article',
@@ -20,6 +19,14 @@ export const uRoutes = [
         component: () => import('@/views/article/list/listPage.vue'),
         meta: {
           title: '文章列表'
+        }
+      },
+      {
+        path: 'cate',
+        name: 'list',
+        component: () => import('@/views/article/cate/catePage.vue'),
+        meta: {
+          title: '文章分类'
         }
       },
       {
@@ -49,7 +56,8 @@ export const uRoutes = [
         name: 'pwd',
         component: () => import('@/views/user/repwd/repwdPage.vue'),
         meta: { title: '重置密码' }
-      }]
+      }
+    ]
   }
 ]
 
@@ -82,7 +90,7 @@ const RouterConfig = {
 // 防止重复点击
 const originalPush = Router.prototype.push
 Router.prototype.push = function push (location) {
-  return originalPush.call(this, location).catch(err => err)
+  return originalPush.call(this, location).catch((err) => err)
 }
 
 // export const router = new Router(RouterConfig)

@@ -32,13 +32,6 @@
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item prop="detail" label="内容">
-            <el-input type="textarea" v-model="selectList.detail"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
           <el-form-item label="标签">
             <el-checkbox-group v-model="selectList.tag_id">
               <el-checkbox-button
@@ -53,9 +46,13 @@
       </el-row>
       <el-row style="text-align: center">
         <el-button @click="cancel">取消</el-button>
-        <el-button type="primary" @click="add">确定</el-button>
+        <el-button type="primary" @click="openEditor">确定</el-button>
       </el-row>
     </el-form>
+    <el-dialog :visible.sync="showEditor" fullscreen append-to-body>
+      <mavon-editor v-model="selectList.detail"></mavon-editor>
+      <el-button @click="add">确定</el-button>
+    </el-dialog>
   </div>
 </template>
 
@@ -81,6 +78,7 @@ export default {
         raw: '',
         article_avatar: ''
       },
+      showEditor: false,
       rules: {
         name: [{ required: 'true', trigger: 'blur', message: '标题不能为空' }],
         author: [
@@ -104,14 +102,22 @@ export default {
       this.$emit('cancel')
       this.selectList.tag_id = null
     },
-    add () {
+    openEditor () {
       if (
         !this.selectList.name ||
-        !this.selectList.author ||
-        !this.selectList.detail
+        !this.selectList.author
       ) {
         return this.$message({
           message: '请输入完整',
+          type: 'warning'
+        })
+      }
+      this.showEditor = true
+    },
+    add () {
+      if (!this.selectList.detail) {
+        return this.$message({
+          message: '内容不能为空',
           type: 'warning'
         })
       }
@@ -130,6 +136,7 @@ export default {
       this['article/addArticle'](this.selectList)
       location.reload()
       this.cancel()
+      this.showEditor = false
     },
     sendPic (raw) {
       this.selectList.article_avatar = raw
