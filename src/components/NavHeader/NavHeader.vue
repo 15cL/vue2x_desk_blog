@@ -2,19 +2,20 @@
   <div class="nav_header">
     <div class="nav">
       <div class="left">
+        <!-- <div class="icon"><i class="iconfont icon-liebiao" style="color:green"></i></div> -->
         <div class="logo">
           <div class="blog_sty">
-            <h2>{{iconName}}</h2>
-            <h2 style="font-size:1.5rem">{{name}}</h2>
+            <h2>{{ iconName }}</h2>
+            <h2 style="font-size: 1.5rem">{{ icon_name }}</h2>
           </div>
         </div>
         <div class="title">
-          <a href="#">首页</a>
-          <a href="#">博客</a>
-          <a href="#">归档</a>
-          <a href="#">留言</a>
-          <a href="#">关于</a>
+          <a href="#" v-for="(nav, index) in navs" :key="index">{{ nav }}</a>
         </div>
+      </div>
+      <div class="icon_btn">
+        <i class="iconfont icon-caidan" v-if="!drawer" @click="drawer = true"></i>
+        <i class="iconfont icon-chahao" v-else @click="drawer = false"></i>
       </div>
       <div class="search">
         <div class="box">
@@ -27,15 +28,25 @@
         </div>
       </div>
     </div>
+    <HomeDrawer v-if="drawer" :navs="navs" @exit="exit"></HomeDrawer>
   </div>
 </template>
 
 <script>
+import HomeDrawer from '@/components/homedrawer/HomeDrawer.vue'
 export default {
+  components: {
+    HomeDrawer
+  },
+  props: ['iconName', 'icon_name', 'navs'],
   data () {
     return {
-      iconName: 'Blog',
-      name: 'little five'
+      drawer: ''
+    }
+  },
+  methods: {
+    exit () {
+      this.drawer = false
     }
   }
 }
@@ -43,7 +54,7 @@ export default {
 
 <style lang="scss" scoped>
 .nav_header {
-  width: 100%;
+  position: relative;
   height: 3rem;
   line-height: 3rem;
   padding: 0.5rem 0;
@@ -71,12 +82,12 @@ export default {
       }
 
       .title {
-        display: flex;
         width: 26rem;
         justify-content: space-around;
         a {
           display: block;
           padding: 0 1rem;
+          overflow: hidden;
         }
       }
     }
@@ -93,6 +104,7 @@ export default {
           line-height: 3rem;
           box-shadow: none;
           input {
+            width: 10rem;
             margin: 0.3rem 0;
             height: 2.4rem;
             box-shadow: none;

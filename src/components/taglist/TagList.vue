@@ -1,0 +1,52 @@
+<template>
+  <div class="tag_list">
+    <header><i class="iconfont icon-biaoqian"></i> 标签</header>
+    <section>
+      <a v-for="tag in tags" :key="tag.id">
+        <p>{{ tag.name }}</p>
+        <span style="color: white">1</span>
+      </a>
+    </section>
+  </div>
+</template>
+
+<script>
+export default {
+  props: ['tags']
+}
+</script>
+
+<style lang="scss" scoped>
+.tag_list {
+  margin-top: 1rem;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.3rem;
+
+  section {
+    display: flex;
+    flex-wrap: wrap;
+    a {
+      display: flex;
+      margin: 1rem 0.6rem 0 0;
+      padding: 0.4rem 0.8rem;
+      border-radius: 2rem;
+      font-size: 0.9rem;
+      background-color: var(--theme-bg-color);
+      cursor: pointer;
+      span {
+        margin-left: 0.3rem;
+        padding: 0 0.6rem;
+        text-align: center;
+        display: inline-block;
+        border-radius: 1rem;
+        background-color: rgb(210, 207, 207);
+      }
+    }
+    & :hover {
+      color: rgb(218, 170, 24);
+      box-shadow: 0 0 0.4rem rgb(232, 230, 230);
+    }
+  }
+}
+</style>
