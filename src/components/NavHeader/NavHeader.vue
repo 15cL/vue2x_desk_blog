@@ -10,11 +10,17 @@
           </div>
         </div>
         <div class="title">
-          <a href="#" v-for="(nav, index) in navs" :key="index">{{ nav }}</a>
+          <span v-for="(nav, index) in navs" :key="index" @click="tapTo(nav)">{{
+            nav
+          }}</span>
         </div>
       </div>
       <div class="icon_btn">
-        <i class="iconfont icon-caidan" v-if="!drawer" @click="drawer = true"></i>
+        <i
+          class="iconfont icon-caidan"
+          v-if="!drawer"
+          @click="drawer = true"
+        ></i>
         <i class="iconfont icon-chahao" v-else @click="drawer = false"></i>
       </div>
       <div class="search">
@@ -47,6 +53,27 @@ export default {
   methods: {
     exit () {
       this.drawer = false
+    },
+    tapTo (name) {
+      switch (name) {
+        case '首页':
+          this.$router.push({ name })
+          break
+        case '博客':
+          this.$router.push('/home')
+          break
+        case '归档':
+          this.$router.push('/home')
+          break
+        case '留言':
+          this.$router.push('/home')
+          break
+        case '关于':
+          this.$router.push('/home')
+          break
+        default:
+          break
+      }
     }
   }
 }
@@ -84,10 +111,11 @@ export default {
       .title {
         width: 26rem;
         justify-content: space-around;
-        a {
+        span {
           display: block;
           padding: 0 1rem;
           overflow: hidden;
+          cursor: pointer;
         }
       }
     }
