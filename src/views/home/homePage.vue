@@ -37,11 +37,25 @@ export default {
   components: {
     SideBar
   },
+  async created () {
+    await this.getTags() // 获取所有标签
+    await this.getCates() // 获取所有分类
+  },
   methods: {
     ...mapMutations(['user/removeToken']),
     logout () {
       this['user/removeToken']()
       this.$router.push('/login')
+    },
+    // 获取所有标签
+    async getTags () {
+      const res = await this.$store.dispatch('tag/getTags')
+      window.localStorage.setItem('json_tag', JSON.stringify(res.data.data))
+    },
+    // 获取所有分类
+    async getCates () {
+      const res = await this.$store.dispatch('cate/getCates')
+      window.localStorage.setItem('json_cate', JSON.stringify(res.data.data))
     }
   }
 }

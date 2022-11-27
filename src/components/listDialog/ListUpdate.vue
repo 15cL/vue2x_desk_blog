@@ -94,6 +94,7 @@ export default {
         unquote: '',
         detail: '',
         tag_id: '',
+        cate_id: '',
         traffic: '',
         id: '',
         article_avatar: ''
@@ -109,6 +110,7 @@ export default {
   },
   created () {
     this.selectList = { ...this.list }
+    console.log(this.selectList)
     this.getDefaultTag()
     this.getDefaultCate()
   },
@@ -140,6 +142,7 @@ export default {
     getDefaultTag () {
       this.allTags = JSON.parse(this.tags) // 列出所有的tag
       const Idarr = JSON.parse(this.selectList.tag_id) // 获取已选中的id
+      console.log(Idarr)
       const arr = []
       const _this = this
 

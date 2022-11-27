@@ -51,17 +51,14 @@ export default {
     }
   },
   created () {
-    if (this.getTags()) {
-      this.loading = false
-    }
+    this.getTags()
   },
   methods: {
     ...mapActions(['tag/updateTag', 'tag/delTag', 'tag/addTag']),
-    async   getTags () {
+    async getTags () {
       const res = await this.$store.dispatch('tag/getTags')
       this.list = res.data.data
       window.localStorage.setItem('json_tag', JSON.stringify(res.data.data))
-      return true
     },
 
     // 更新标签 打开dialog
