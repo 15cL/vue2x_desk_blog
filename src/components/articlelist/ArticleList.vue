@@ -1,7 +1,11 @@
 <template>
   <div class="article_list">
     <ul>
-      <li v-for="article in articles" :key="article.id">
+      <li
+        v-for="article in articles"
+        :key="article.id"
+        @click="tapToDetail(article)"
+      >
         <div class="detail">
           <h2>{{ article.name }}</h2>
           <div class="other">
@@ -11,7 +15,7 @@
                 style="font-size: 0.8rem; margin-left: 0.2rem"
                 v-for="(item, index) in JSON.parse(article.cate_id)"
                 :key="index"
-                >{{ getName(cates,item) }}</i
+                >{{ getName(cates, item) }}</i
               ></span
             >
             <span
@@ -28,7 +32,7 @@
             <span
               v-for="(item, index) in JSON.parse(article.tag_id)"
               :key="index"
-              >{{ getName(tags,item)}}</span
+              >{{ getName(tags, item) }}</span
             >
           </div>
         </div>
@@ -37,7 +41,7 @@
         </div>
       </li>
     </ul>
-    <div style="text-align: center; padding: 1rem">
+    <div v-if="articles" style="text-align: center; padding: 1rem">
       <el-pagination
         ref="el_pa"
         :background="isBackground"
@@ -55,18 +59,31 @@
 import { getName } from '@/utills/index'
 import { formateTime } from '@/utills/formate'
 export default {
-  props: ['articles', 'tags', 'cates'],
+  props: ['articles'],
   data () {
     return {
-      isBackground: true
+      isBackground: true,
+      tags: JSON.parse(window.localStorage.getItem('tags')),
+      cates: JSON.parse(window.localStorage.getItem('cates'))
     }
   },
   methods: {
+    // 格式化时间
     formateTime (time) {
       return formateTime(time)
     },
+
+    // 获取标签名或类名
     getName (arr, id) {
       return getName(arr, id)
+    },
+
+    // 跳转详情页
+    tapToDetail (article) {
+      this.$router.push({
+        path: '/blog/detail',
+        query: { article: encodeURIComponent(JSON.stringify({ ...article, cates: this.cates, tags: this.tags })) }
+      })
     }
   }
 }
@@ -74,7 +91,11 @@ export default {
 <style lang="scss" scoped>
 .article_list {
   @media screen and (min-width: 640px) {
+    width: 45.9063rem;
     margin-top: 1rem;
+  }
+  @media screen and (max-width: 950px) {
+    width: 100%;
   }
   @media screen and (max-width: 640px) {
     margin-top: 0.6rem;
@@ -89,6 +110,7 @@ export default {
       position: relative;
       animation: upper 1s;
       --webkit-animation: upper 1s;
+      cursor: pointer;
       .detail {
         flex: 2.5;
         .other {

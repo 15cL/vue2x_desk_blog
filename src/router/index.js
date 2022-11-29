@@ -12,6 +12,15 @@ const routes = [
     path: '/home',
     name: '首页',
     component: () => import('@/views/home/HomePage.vue')
+  },
+  {
+    path: '/blog',
+    name: '博客',
+    component: () => import('@/views/home/HomePage.vue'),
+    children: [
+      { path: 'detail', component: () => import('@/views/Artdetail/ArticleDetail.vue') },
+      { path: 'cate', component: () => import('@/views/CateArticle/CateArtPage.vue') }
+    ]
   }
 ]
 

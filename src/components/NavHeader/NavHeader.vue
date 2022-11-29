@@ -10,9 +10,13 @@
           </div>
         </div>
         <div class="title">
-          <span v-for="(nav, index) in navs" :key="index" @click="tapTo(nav)">{{
-            nav
-          }}</span>
+          <span
+            v-for="(nav, index) in navs"
+            :key="index"
+            :style="{ color: $route.name == nav ? 'green' : '' }"
+            @click="tapTo(nav)"
+            >{{ nav }}</span
+          >
         </div>
       </div>
       <div class="icon_btn">
@@ -20,26 +24,33 @@
           class="iconfont icon-caidan"
           v-if="!drawer"
           @click="drawer = true"
+          style="cursor: pointer"
         ></i>
         <i class="iconfont icon-chahao" v-else @click="drawer = false"></i>
       </div>
       <div class="search">
         <div class="box">
           <form action="">
-            <input type="text" placeholder="搜索内容" />
+            <input v-model="info" type="text" placeholder="搜索内容" />
           </form>
-          <button class="serach_btn">
+          <button class="serach_btn" @click="searchRes(info)">
             <i class="iconfont icon-sousuo"></i>
           </button>
         </div>
       </div>
     </div>
-    <HomeDrawer v-if="drawer" :navs="navs" @exit="exit"></HomeDrawer>
+    <HomeDrawer
+      v-if="drawer"
+      :navs="navs"
+      @exit="exit"
+      @goTab="tapTo"
+    ></HomeDrawer>
   </div>
 </template>
 
 <script>
 import HomeDrawer from '@/components/homedrawer/HomeDrawer.vue'
+import { mapActions } from 'vuex'
 export default {
   components: {
     HomeDrawer
@@ -47,33 +58,25 @@ export default {
   props: ['iconName', 'icon_name', 'navs'],
   data () {
     return {
-      drawer: ''
+      drawer: '',
+      info: ''
     }
   },
   methods: {
+    ...mapActions(['article/getSearchAticles']),
     exit () {
       this.drawer = false
     },
+
+    // 跳转页面
     tapTo (name) {
-      switch (name) {
-        case '首页':
-          this.$router.push({ name })
-          break
-        case '博客':
-          this.$router.push('/home')
-          break
-        case '归档':
-          this.$router.push('/home')
-          break
-        case '留言':
-          this.$router.push('/home')
-          break
-        case '关于':
-          this.$router.push('/home')
-          break
-        default:
-          break
-      }
+      this.$router.push({ name })
+    },
+
+    // 搜索
+    async searchRes (info) {
+      const res = await this['article/getSearchAticles'](info)
+      console.log(res)
     }
   }
 }

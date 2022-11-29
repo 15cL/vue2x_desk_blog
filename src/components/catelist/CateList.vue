@@ -2,10 +2,11 @@
   <div class="cate_list">
     <header><i class="iconfont icon-caidan"></i> 分类</header>
     <section>
-      <a
+      <label
         v-for="cate in cates"
         :key="cate.id"
-        ><i class="iconfont icon-jinrujiantou"></i>{{ cate.name }} (1)</a
+        @click.prevent="tabToCateArt(cate)"
+        ><i class="iconfont icon-jinrujiantou"></i>{{ cate.name }} ({{cate.num}})</label
       >
     </section>
   </div>
@@ -13,13 +14,20 @@
 
 <script>
 export default {
-  props: ['cates']
+  props: ['cates'],
+  methods: {
+    tabToCateArt (cate) {
+      this.$router.push({
+        path: '/blog/cate',
+        query: { cate: encodeURIComponent(JSON.stringify(cate)) }
+      })
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .cate_list {
-  margin-top: 1rem;
   background-color: white;
   padding: 2rem;
   border-radius: 0.3rem;
@@ -27,7 +35,7 @@ export default {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    a {
+    label {
       margin-top: 1rem;
       flex: 0 1 47%;
       padding: 0.7rem 0 0.7rem 0.2rem;

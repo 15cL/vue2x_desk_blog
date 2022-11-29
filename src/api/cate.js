@@ -7,3 +7,14 @@ export function getCates () {
     method: 'get'
   })
 }
+
+// 获取分类文章
+export function getCateArticle (id) {
+  return request({
+    url: '/cate/article',
+    params: {
+      id: id
+    },
+    method: 'get'
+  })
+}

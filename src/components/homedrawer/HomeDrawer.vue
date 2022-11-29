@@ -13,8 +13,10 @@
       </div>
       <div class="title">
         <ul>
-          <li v-for="(nav, index) in navs" :key="index">
-            <a href="#">{{ nav }}</a>
+          <li v-for="(nav, index) in navs" :key="index" @click="tapTo(nav)">
+            <a href="#" :style="{ color: $route.name == nav ? 'green' : '' }">{{
+              nav
+            }}</a>
           </li>
         </ul>
       </div>
@@ -28,6 +30,9 @@ export default {
   methods: {
     exit () {
       this.$emit('exit')
+    },
+    tapTo (nav) {
+      this.$emit('goTab', nav)
     }
   }
 }
@@ -48,6 +53,7 @@ export default {
     padding: 0.8rem 2rem 0 0.3rem;
     background-color: white;
     z-index: 999;
+    animation: fade-in 1s;
     .search {
       width: 12rem;
       .box {
@@ -91,6 +97,12 @@ export default {
           border-bottom: 0.01rem solid gainsboro;
         }
       }
+    }
+  }
+  @keyframes fade-in {
+    0% {
+      transform: translateX(50%);
+      opacity: 1;
     }
   }
 }

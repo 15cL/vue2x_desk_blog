@@ -1,9 +1,9 @@
 :root {
   --theme-bg-color: #f4f6f8;
-  --main-width: 76rem;
+  --main-width: 68.125rem;
 }
 
-@media screen and (max-width: 1250px) {
+@media screen and (max-width: 1120px) {
   :root {
     --main-width: 100%;
   }
@@ -26,8 +26,7 @@
 
 @media screen and (min-width: 640px) {
   .banner img {
-    width: 51.5625rem;
-    height: 32.1875rem;
+    width: 45.3125rem;
   }
   .icon_btn {
     display: none;
@@ -87,7 +86,7 @@
   }
 }
 
-@media screen and (max-width: 1160px) {
+@media screen and (max-width: 950px) {
   .col_sec {
     display: none;
   }

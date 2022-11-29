@@ -2,10 +2,10 @@
   <div class="tag_list">
     <header><i class="iconfont icon-biaoqian"></i> 标签</header>
     <section>
-      <a v-for="tag in tags" :key="tag.id">
+      <label v-for="tag in tags" :key="tag.id">
         <p>{{ tag.name }}</p>
-        <span style="color: white">1</span>
-      </a>
+        <span style="color: white">({{ tag.num }})</span>
+      </label>
     </section>
   </div>
 </template>
@@ -26,17 +26,17 @@ export default {
   section {
     display: flex;
     flex-wrap: wrap;
-    a {
+    font-size: 0.1rem;
+    label {
       display: flex;
       margin: 1rem 0.6rem 0 0;
-      padding: 0.4rem 0.8rem;
+      padding: 0.4rem 0.5rem;
       border-radius: 2rem;
-      font-size: 0.9rem;
       background-color: var(--theme-bg-color);
       cursor: pointer;
       span {
         margin-left: 0.3rem;
-        padding: 0 0.6rem;
+        padding: 0 0.4rem;
         text-align: center;
         display: inline-block;
         border-radius: 1rem;
