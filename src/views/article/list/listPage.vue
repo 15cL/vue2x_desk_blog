@@ -5,7 +5,7 @@
         <el-button type="primary" @click="addArticle">添加文章</el-button>
       </div>
       <div>
-        <el-table stripe :data="list" v-loading="loading">
+        <el-table stripe :data="list">
           <el-table-column prop="createdate" label="创建日期"></el-table-column>
           <el-table-column prop="name" label="标题"></el-table-column>
           <el-table-column prop="author" label="作者"></el-table-column>
@@ -91,7 +91,6 @@ export default {
   },
   data () {
     return {
-      loading: true,
       list: [],
       selectList: [],
       dialogFormVisible: false,
@@ -107,8 +106,6 @@ export default {
     this.jsonCate = window.localStorage.getItem('json_cate')
 
     await this.getList() // 获取所有文章
-    // this.cates =
-    this.loading = false
   },
   methods: {
     ...mapActions(['article/delArticle']),

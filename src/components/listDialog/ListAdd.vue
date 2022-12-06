@@ -25,13 +25,6 @@
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item prop="unquote" label="引文">
-            <el-input v-model="selectList.unquote"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-        <el-row>
-        <el-col>
           <el-form-item label="分类">
             <el-checkbox-group v-model="selectList.cate_id">
               <el-checkbox-button
@@ -65,7 +58,7 @@
     </el-form>
     <el-dialog :visible.sync="showEditor" fullscreen append-to-body>
       <mavon-editor v-model="selectList.detail"></mavon-editor>
-      <el-button @click="add">确定</el-button>
+      <el-button style="margin-top: 1rem" @click="add">确定</el-button>
     </el-dialog>
   </div>
 </template>
@@ -120,10 +113,7 @@ export default {
       this.selectList.tag_id = null
     },
     openEditor () {
-      if (
-        !this.selectList.name ||
-        !this.selectList.author
-      ) {
+      if (!this.selectList.name || !this.selectList.author) {
         return this.$message({
           message: '请输入完整',
           type: 'warning'
@@ -174,5 +164,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

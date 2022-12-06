@@ -29,15 +29,8 @@
       </el-row>
       <el-row>
         <el-col>
-          <el-form-item prop="unquote" label="引文">
-            <el-input v-model="selectList.unquote"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col>
           <el-form-item prop="detail" label="内容">
-            <el-input type="textarea" v-model="selectList.detail"></el-input>
+            <el-input type="textarea" v-model="selectList.detail" @focus="openEditor"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -74,6 +67,10 @@
         <el-button type="primary" @click="update">确定</el-button>
       </el-row>
     </el-form>
+    <el-dialog :visible.sync="showEditor" fullscreen append-to-body>
+      <mavon-editor v-model="selectList.detail"></mavon-editor>
+      <el-button style="margin-top: 1rem" @click="okDeatail">确定</el-button>
+    </el-dialog>
   </div>
 </template>
 
@@ -100,7 +97,8 @@ export default {
         article_avatar: ''
       },
       allTags: [],
-      allCates: []
+      allCates: [],
+      showEditor: false
     }
   },
   computed: {
@@ -122,7 +120,12 @@ export default {
       this.$emit('cancel')
       this.selectList.tag_id = null
     },
-
+    openEditor () {
+      this.showEditor = true
+    },
+    okDeatail () {
+      this.showEditor = false
+    },
     getDefaultCate () {
       this.allCates = JSON.parse(this.cates) // 列出所有的tag
       const Idarr = JSON.parse(this.selectList.cate_id) // 获取已选中的id

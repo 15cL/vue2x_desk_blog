@@ -26,13 +26,6 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="selectList.unquote">
-        <el-col>
-          <el-form-item label="引文">
-            <el-input :value="selectList.unquote" disabled></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
       <el-row>
         <el-col>
           <el-form-item label="内容">

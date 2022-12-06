@@ -25,6 +25,7 @@ const actions = {
   async addCate (context, CateName) {
     return await addCate(CateName)
   }
+
 }
 
 export default {

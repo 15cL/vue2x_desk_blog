@@ -5,7 +5,7 @@
         <el-button type="primary" @click="addTagOpen">新增标签</el-button>
       </div>
       <div>
-        <el-table stripe :data="list" v-loading='loading'>
+        <el-table stripe :data="list">
           <el-table-column prop="name" label="名称"></el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
@@ -40,7 +40,6 @@ import { mapActions } from 'vuex'
 export default {
   data () {
     return {
-      loading: true,
       list: [],
       dialogFormVisible: false,
       title: '',
