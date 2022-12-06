@@ -24,12 +24,7 @@ export default {
       colors: ['red', 'orangered', 'orange']
     }
   },
-  // watch: {
-  //   $route (to, from) {
-  //     if (to.query.article !== from.query.article) {
-  //     }
-  //   }
-  // },
+
   methods: {
     // 跳转详情页
     tapToDetail (article) {

@@ -6,20 +6,58 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '',
-    component: () => import('@/views/home/HomePage.vue')
+    component: () => import('@/views/home/HomePage.vue'),
+    meta: {
+      user: true,
+      article: true
+    }
   },
   {
     path: '/home',
     name: '首页',
-    component: () => import('@/views/home/HomePage.vue')
+    component: () => import('@/views/home/HomePage.vue'),
+    meta: {
+      user: true,
+      article: true
+    }
   },
   {
     path: '/blog',
     name: '博客',
     component: () => import('@/views/home/HomePage.vue'),
+    meta: {
+      user: false,
+      article: true
+    },
     children: [
-      { path: 'detail', component: () => import('@/views/Artdetail/ArticleDetail.vue') },
-      { path: 'cate', component: () => import('@/views/CateArticle/CateArtPage.vue') }
+      {
+        path: 'detail',
+        component: () => import('@/views/Artdetail/ArticleDetail.vue'),
+        meta: {
+          user: true
+        }
+      },
+      {
+        path: 'cate',
+        component: () => import('@/views/CateArticle/CateArtPage.vue'),
+        meta: {
+          user: true
+        }
+      },
+      {
+        path: 'tag',
+        component: () => import('@/views/tagArtPage/TagArtPage.vue'),
+        meta: {
+          user: true
+        }
+      },
+      {
+        path: 'search',
+        component: () => import('@/views/search/SearchPage.vue'),
+        meta: {
+          user: true
+        }
+      }
     ]
   }
 ]

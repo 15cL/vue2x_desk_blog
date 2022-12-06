@@ -2,7 +2,6 @@
   <div class="nav_header">
     <div class="nav">
       <div class="left">
-        <!-- <div class="icon"><i class="iconfont icon-liebiao" style="color:green"></i></div> -->
         <div class="logo">
           <div class="blog_sty">
             <h2>{{ iconName }}</h2>
@@ -31,9 +30,12 @@
       <div class="search">
         <div class="box">
           <form action="">
-            <input v-model="info" type="text" placeholder="搜索内容" />
+            <input v-model="info" type="text" placeholder="搜索内容" @keyup.enter="searchRes(info)"/>
           </form>
-          <button class="serach_btn" @click="searchRes(info)">
+          <button
+            class="serach_btn"
+            @click="searchRes(info)"
+          >
             <i class="iconfont icon-sousuo"></i>
           </button>
         </div>
@@ -76,7 +78,15 @@ export default {
     // 搜索
     async searchRes (info) {
       const res = await this['article/getSearchAticles'](info)
-      console.log(res)
+      this.$router.push({
+        path: '/blog/search',
+        query: {
+          info: encodeURIComponent(
+            JSON.stringify({ list: res.data.data, keyword: info })
+          )
+        }
+      })
+      this.info = ''
     }
   }
 }
@@ -99,6 +109,7 @@ export default {
       display: flex;
       .logo {
         margin-right: 4rem;
+        overflow: hidden;
         .blog_sty {
           display: flex;
           h2:first-child {

@@ -2,9 +2,11 @@
   <div class="cate_art_page">
     <header>
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/home' }">
+          <span class="active">首页</span>
+        </el-breadcrumb-item>
         <el-breadcrumb-item
-          ><span style="cursor: pointer">{{
+          ><span style="cursor: pointer; color: black; font-weight: 600">{{
             cate.name
           }}</span></el-breadcrumb-item
         >
@@ -44,8 +46,15 @@ export default {
 <style lang="scss" scoped>
 .cate_art_page {
   header {
-    padding:1.5rem 1rem;
+    padding: 1.5rem 1rem;
     background-color: white;
+    margin-bottom: 1rem;
+    .active {
+      color: gray;
+      &:hover {
+      color: rgb(9, 126, 236);
+    }
+    }
   }
 }
 </style>

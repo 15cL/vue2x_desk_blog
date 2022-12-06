@@ -92,7 +92,6 @@ export default {
 .article_list {
   @media screen and (min-width: 640px) {
     width: 45.9063rem;
-    margin-top: 1rem;
   }
   @media screen and (max-width: 950px) {
     width: 100%;

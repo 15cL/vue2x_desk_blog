@@ -22,7 +22,7 @@ export default {
     return {
       iconName: 'Blog',
       icon_name: 'little five',
-      navs: ['首页', '博客', '归档', '留言', '关于']
+      navs: ['首页', '博客', '留言', '关于']
     }
   },
   created () {
