@@ -2,7 +2,7 @@
   <div class="tag_page">
     <el-card class="card">
       <el-container>
-        <avatarUpload :picUrl="userform.user_pic"></avatarUpload>
+        <avatarUpload :picUrl="userform.user_pic" v-if="userform.user_pic"></avatarUpload>
         <el-form
           label-width="3.4rem"
           :model="userform"
@@ -102,7 +102,10 @@ export default {
     ...mapActions(['user/updateInfo']),
     async getUserinfo () {
       const res = await this.$store.dispatch('user/getUserinfo')
-      this.userform = res.data
+      const userpic = await this.$store.dispatch('user/getAvatar', { user_pic: res.data.user_pic })
+      const { username, nickname, email } = res.data
+      this.userform = { username, nickname, email, user_pic: 'data:image/png;base64,' + userpic.data.baseUrl }
+      console.log(this.userform)
       this.oooform = JSON.parse(JSON.stringify(res.data))
     },
     cancel () {

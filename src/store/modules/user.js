@@ -1,6 +1,6 @@
 
 import { setToken, getToken, removeToken, setTimeStamp, removeTimeStamp } from '@/until/authToken'
-import { login, reAvatar, getUserinfo, updateInfo, updatePwd } from '@/api/user'
+import { login, reAvatar, getUserinfo, updateInfo, updatePwd, getAvatar } from '@/api/user'
 
 const state = {
   token: getToken()
@@ -51,6 +51,11 @@ const actions = {
   // 重置密码
   async updatePwd (context, data) {
     return await updatePwd(data)
+  },
+
+  // 获取用户头像
+  async getAvatar (context, data) {
+    return await getAvatar(data)
   }
 }
 

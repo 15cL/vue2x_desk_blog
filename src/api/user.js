@@ -44,3 +44,12 @@ export function updatePwd (data) {
     method: 'post'
   })
 }
+
+// 获取头像
+export function getAvatar (params) {
+  return request({
+    url: 'my/avatar',
+    params,
+    method: 'get'
+  })
+}

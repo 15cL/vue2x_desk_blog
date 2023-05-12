@@ -3,7 +3,8 @@
     <el-upload
       class="avatar-uploader"
       :headers="myheader"
-      action='#'
+      action="#"
+      :multiple="false"
       :show-file-list="false"
       :on-success="handleAvatarSuccess"
       :before-upload="beforeAvatarUpload"
@@ -32,18 +33,21 @@ export default {
     }
   },
   created () {
-    this.imageUrl = 'D:\\前端\\' + this.picUrl
+    this.imageUrl = this.picUrl
   },
   methods: {
     ...mapActions(['user/reAvatar']),
-    handleAvatarSuccess (res, file) {
-    },
+    handleAvatarSuccess (res, file) {},
     beforeAvatarUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
+      const fileType = file.raw.type
+      const isJPG =
+        fileType === 'image/jpg' ||
+        fileType === 'image/jpeg' ||
+        fileType === 'image/png'
+      const isLt2M = file.raw.size / 1024 / 1024 < 2
 
       if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
+        this.$message.error('上传头像图片只能是 JPG和PNG 格式!')
       }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!')
@@ -51,10 +55,17 @@ export default {
       return isJPG && isLt2M
     },
     getfile (file, fileList) {
+      const isFileType = this.beforeAvatarUpload(file)
+      if (!isFileType) {
+        fileList = []
+        return
+      }
+      this.imageUrl = file.url
+      // this.imageUrl = file.raw // 这个就是咱们上传图片的二进制对象
       this.getBase64(file.raw).then(res => {
-        this.$emit('provideRaw', res)
+        this.$store.dispatch('user/reAvatar', { avatar: { name: file.name, url: res } })
       })
-      this.imageUrl = URL.createObjectURL(file.raw)
+      // this.imageUrl = URL.createObjectURL(file.raw)
     },
     // 图片转base64
     getBase64 (file) {
@@ -74,33 +85,32 @@ export default {
       })
     }
   }
-
 }
 </script>
 
 <style lang="scss" scoped>
- .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-    border: 1px dashed #d9d9d9;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+  border: 1px dashed #d9d9d9;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>
