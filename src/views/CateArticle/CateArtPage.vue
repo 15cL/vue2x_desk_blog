@@ -3,7 +3,7 @@
     <header>
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/home' }">
-          <span class="active">首页</span>
+          <span class="active"> 首页 </span>
         </el-breadcrumb-item>
         <el-breadcrumb-item
           ><span style="cursor: pointer; color: black; font-weight: 600">{{
@@ -52,8 +52,8 @@ export default {
     .active {
       color: gray;
       &:hover {
-      color: rgb(9, 126, 236);
-    }
+        color: rgb(9, 126, 236);
+      }
     }
   }
 }

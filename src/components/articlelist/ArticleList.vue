@@ -15,7 +15,7 @@
                 style="font-size: 0.8rem; margin-left: 0.2rem"
                 v-for="(item, index) in JSON.parse(article.cate_id)"
                 :key="index"
-                >{{ getName(cates, item) }}</i
+                >{{ getName('cates', item) }}</i
               ></span
             >
             <span
@@ -25,14 +25,14 @@
             <span
               ><i class="iconfont icon-yanjing"></i> {{ article.traffic }}</span
             >
-            <span><i class="iconfont icon-pinglun"></i> {{ 0 }}</span>
+            <span><i class="iconfont icon-pinglun"></i> {{ article.msg_num }}</span>
           </div>
           <p>{{ article.detail }}</p>
           <div class="tag_box">
             <span
               v-for="(item, index) in JSON.parse(article.tag_id)"
               :key="index"
-              >{{ getName(tags, item) }}</span
+              >{{ getName('tags', item) }}</span
             >
           </div>
         </div>
@@ -63,8 +63,8 @@ export default {
   data () {
     return {
       isBackground: true,
-      tags: JSON.parse(window.localStorage.getItem('tags')),
-      cates: JSON.parse(window.localStorage.getItem('cates'))
+      tags: JSON.parse(window.sessionStorage.getItem('tags')),
+      cates: JSON.parse(window.sessionStorage.getItem('cates'))
     }
   },
   methods: {
@@ -80,10 +80,20 @@ export default {
 
     // 跳转详情页
     tapToDetail (article) {
-      this.$router.push({
-        path: '/blog/detail',
-        query: { article: encodeURIComponent(JSON.stringify({ ...article, cates: this.cates, tags: this.tags })) }
-      })
+      try {
+        this.$router.push({
+          path: '/blog/detail',
+          query: {
+            article: encodeURIComponent(
+              JSON.stringify({ ...article, cates: this.cates, tags: this.tags })
+            )
+          }
+        })
+      } catch (error) {
+        return error
+      } finally {
+        this.$store.dispatch('article/insertTraffic', article.id)
+      }
     }
   }
 }
@@ -91,7 +101,7 @@ export default {
 <style lang="scss" scoped>
 .article_list {
   @media screen and (min-width: 640px) {
-    width: 45.9063rem;
+    width: 47.9063rem;
   }
   @media screen and (max-width: 950px) {
     width: 100%;

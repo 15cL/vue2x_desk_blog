@@ -56,6 +56,7 @@ export default {
   header {
     display: flex;
     align-items: center;
+    width: 45.9063rem;
     padding: 1rem;
     margin-bottom: 1rem;
     background-color: white;

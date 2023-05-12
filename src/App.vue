@@ -37,13 +37,13 @@ export default {
     // 获取分类列表
     async getCates () {
       const res = await this.$store.dispatch('cate/getCates')
-      window.localStorage.setItem('cates', JSON.stringify(res.data.data))
+      window.sessionStorage.setItem('cates', JSON.stringify(res.data.data))
     },
 
     // 获取标签列表
     async getTags () {
       const res = await this.$store.dispatch('tag/getTags')
-      window.localStorage.setItem('tags', JSON.stringify(res.data.data))
+      window.sessionStorage.setItem('tags', JSON.stringify(res.data.data))
     }
 
   }

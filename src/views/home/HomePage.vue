@@ -3,7 +3,10 @@
     <div class="row">
       <div class="col_fir">
         <transition name="banner">
-          <div class="banner" v-if="$route.path == '/home'">
+          <div
+            class="banner"
+            v-if="$route.path == '/home' || $route.path == '/'"
+          >
             <img src="../../assets/pic/banner1.jpg" />
           </div>
         </transition>
@@ -14,6 +17,8 @@
             :cates="cates"
             :tags="tags"
           ></ArticleList>
+          <AboutPage v-else-if="$route.meta.about"></AboutPage>
+            <MsgList v-else-if='$route.meta.msg' :msgList="msgList"></MsgList>
           <router-view v-if="refresh" />
         </div>
       </div>
@@ -29,7 +34,7 @@
           </div>
         </transition>
         <cate-list :cates="cates"></cate-list>
-        <tag-list :tags="tags"></tag-list>
+        <tag-list :tags="tags" v-if="!$route.meta.about"></tag-list>
         <HotArticle
           :hots="hotArticles"
           :cates="cates"
@@ -45,12 +50,17 @@ import CateList from '@/components/catelist/CateList.vue'
 import TagList from '@/components/taglist/TagList.vue'
 import ArticleList from '@/components/articlelist/ArticleList.vue'
 import HotArticle from '@/components/hotarticle/HotArticle.vue'
+import AboutPage from '@/views/about/AboutPage.vue'
+import MsgList from '@/components/msglist/MsgList.vue'
+
 export default {
   components: {
     CateList,
     TagList,
     ArticleList,
-    HotArticle
+    HotArticle,
+    AboutPage,
+    MsgList
   },
   data () {
     return {
@@ -60,11 +70,12 @@ export default {
       tags: [],
       articles: [],
       hotArticles: [],
-      refresh: true
+      refresh: true,
+      msgList: []
     }
   },
   watch: {
-    $route (to, from) {
+    async $route (to, from) {
       // 切换文章刷新
       if (
         to.query.article !== from.query.article ||
@@ -76,6 +87,10 @@ export default {
         this.$nextTick(() => {
           this.refresh = true
         })
+      }
+      // 获取所有留言
+      if (to.meta.msg) {
+        this.msgList = await this.$store.dispatch('msg/getAllMsg')
       }
     }
   },
@@ -91,7 +106,7 @@ export default {
   methods: {
     // 获取分类文章
     async getCateArticle () {
-      const cates = JSON.parse(window.localStorage.getItem('cates'))
+      const cates = JSON.parse(window.sessionStorage.getItem('cates'))
       const yyy = []
 
       cates.forEach(async (v) => {
@@ -104,7 +119,7 @@ export default {
 
     // 获取标签文章
     async getTagArticle () {
-      const tags = JSON.parse(window.localStorage.getItem('tags'))
+      const tags = JSON.parse(window.sessionStorage.getItem('tags'))
       const ooo = []
 
       tags.forEach(async (v) => {
@@ -154,9 +169,8 @@ export default {
     }
 
     .col_sec {
-      flex: 1;
       margin-left: 1rem;
-      width: 100%;
+      width: 19.2125rem;
       .user {
         text-align: center;
         padding: 3rem 2rem;

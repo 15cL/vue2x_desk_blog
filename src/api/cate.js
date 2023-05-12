@@ -13,7 +13,7 @@ export function getCateArticle (id) {
   return request({
     url: '/cate/article',
     params: {
-      id: id
+      id
     },
     method: 'get'
   })

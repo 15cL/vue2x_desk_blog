@@ -59,6 +59,23 @@ const routes = [
         }
       }
     ]
+  },
+  {
+    path: '/about',
+    name: '关于',
+    component: () => import('@/views/home/HomePage.vue'),
+    meta: {
+      user: true,
+      about: true
+    }
+  },
+  {
+    path: '/msg',
+    name: '留言',
+    component: () => import('@/views/home/HomePage.vue'),
+    meta: {
+      msg: true
+    }
   }
 ]
 

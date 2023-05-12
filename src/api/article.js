@@ -27,3 +27,24 @@ export function getSearchAticles (info) {
     method: 'get'
   })
 }
+
+// 获取文章下留言
+export function getArticleMsg (id) {
+  return request({
+    url: '/article/msg',
+    params: {
+      id
+    },
+    method: 'get'
+  })
+}
+
+// 计算文章流量
+export function insertTraffic (id) {
+  console.log('idddd', id)
+  return request({
+    url: '/article/traffic',
+    data: { id },
+    method: 'post'
+  })
+}

@@ -9,6 +9,12 @@ import '@/assets/css/index.scss'
 
 import '@/assets/css/icon.scss'
 
+import * as directives from '@/utills/directives'
+
+Object.keys(directives).forEach(key => {
+  Vue.directive(key, directives[key])
+})
+
 Vue.config.productionTip = false
 
 new Vue({
