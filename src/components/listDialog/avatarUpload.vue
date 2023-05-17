@@ -11,7 +11,7 @@
       :on-change="getfile"
       :auto-upload="false"
     >
-      <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+      <img v-if="imageUrl||picUrl" :src="imageUrl||picUrl" class="avatar" />
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
   </div>
@@ -62,9 +62,18 @@ export default {
       }
       this.imageUrl = file.url
       // this.imageUrl = file.raw // 这个就是咱们上传图片的二进制对象
-      this.getBase64(file.raw).then(res => {
-        this.$store.dispatch('user/reAvatar', { avatar: { name: file.name, url: res } })
-      })
+      if (this.$route.path === '/home/article/list') {
+        this.getBase64(file.raw).then((res) => {
+          this.$emit('getAva', { name: file.name, url: res })
+        })
+      } else {
+        this.getBase64(file.raw).then((res) => {
+          this.$store.dispatch('user/reAvatar', {
+            avatar: { name: file.name, url: res }
+          })
+        })
+      }
+
       // this.imageUrl = URL.createObjectURL(file.raw)
     },
     // 图片转base64

@@ -105,7 +105,6 @@ export default {
       const userpic = await this.$store.dispatch('user/getAvatar', { user_pic: res.data.user_pic })
       const { username, nickname, email } = res.data
       this.userform = { username, nickname, email, user_pic: 'data:image/png;base64,' + userpic.data.baseUrl }
-      console.log(this.userform)
       this.oooform = JSON.parse(JSON.stringify(res.data))
     },
     cancel () {

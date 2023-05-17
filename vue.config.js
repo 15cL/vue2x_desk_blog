@@ -1,5 +1,7 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
+  publicPath: './',
+  assetsDir: 'static',
   transpileDependencies: true,
   configureWebpack: {
     externals: {
@@ -9,6 +11,12 @@ module.exports = defineConfig({
       // 不去 node_modules 中找，而是去找 全局变量 ELEMENT
       'element-ui': 'ELEMENT' // 需要纯大写
     }
+  },
+  chainWebpack: config => {
+    config.plugin('html').tap(args => {
+      args[0].title = '小五博客管理'
+      return args
+    })
   },
   devServer: {
     proxy: {

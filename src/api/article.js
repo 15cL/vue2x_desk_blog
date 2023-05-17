@@ -1,4 +1,3 @@
-
 import request from '@/until/request'
 
 // 获取所有文章
@@ -33,5 +32,13 @@ export function addArticle (data) {
     url: '/article/new',
     data,
     method: 'post'
+  })
+}
+
+export function getAvatar (params) {
+  return request({
+    url: '/article/getAvatar',
+    params,
+    method: 'get'
   })
 }

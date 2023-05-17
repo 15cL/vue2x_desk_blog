@@ -1,4 +1,4 @@
-import { addArticle, delArticle, getArticleList, updateArticle } from '@/api/article'
+import { addArticle, delArticle, getArticleList, updateArticle, getAvatar } from '@/api/article'
 
 const state = {}
 
@@ -24,6 +24,12 @@ const actions = {
   // 新增文章
   async addArticle (constext, data) {
     return await addArticle(data)
+  },
+
+  // 获取文章大图
+  async getAvatar (context, data) {
+    const res = await getAvatar(data)
+    return res.data.baseUrl
   }
 }
 

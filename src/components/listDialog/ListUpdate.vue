@@ -2,7 +2,7 @@
   <div class="list_detail">
     <avatarUpload
       style="margin: 0rem 5rem 3rem"
-      @provideRaw="sendPic"
+      @getAva="getAva"
       :picUrl="imgUrl"
     ></avatarUpload>
     <el-form label-width="5rem" :model="selectList">
@@ -88,7 +88,6 @@ export default {
         name: '',
         author: '',
         createdate: '',
-        unquote: '',
         detail: '',
         tag_id: '',
         cate_id: '',
@@ -96,25 +95,20 @@ export default {
         id: '',
         article_avatar: ''
       },
+      imgUrl: '',
       allTags: [],
       allCates: [],
       showEditor: false
     }
   },
-  computed: {
-    imgUrl () {
-      return this.selectList.article_avatar
-    }
-  },
   created () {
     this.selectList = { ...this.list }
-    console.log(this.selectList)
     this.getDefaultTag()
     this.getDefaultCate()
+    this.getArtAvatar()
   },
   methods: {
-    ...mapActions(['article/updateArticle']),
-
+    ...mapActions(['article/updateArticle', 'article/getAvatar']),
     // 关闭dialog
     cancel () {
       this.$emit('cancel')
@@ -125,6 +119,14 @@ export default {
     },
     okDeatail () {
       this.showEditor = false
+    },
+
+    getAva (ava) {
+      this.selectList.article_avatar = JSON.stringify(ava)
+    },
+    async getArtAvatar () {
+      const res = await this['article/getAvatar']({ id: this.list.id })
+      this.imgUrl = 'data:image/png;base64,' + res
     },
     getDefaultCate () {
       this.allCates = JSON.parse(this.cates) // 列出所有的tag
@@ -145,7 +147,6 @@ export default {
     getDefaultTag () {
       this.allTags = JSON.parse(this.tags) // 列出所有的tag
       const Idarr = JSON.parse(this.selectList.tag_id) // 获取已选中的id
-      console.log(Idarr)
       const arr = []
       const _this = this
 
@@ -196,9 +197,6 @@ export default {
         location.reload()
       }
       this.$emit('cancel')
-    },
-    sendPic (raw) {
-      this.selectList.article_avatar = raw
     }
   }
 }

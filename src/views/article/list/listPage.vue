@@ -115,7 +115,6 @@ export default {
         v.createdate = validaTime(v.createdate)
       })
       this.list = res.data.data
-      console.log(this.list)
     },
 
     // 打开文章详情弹窗

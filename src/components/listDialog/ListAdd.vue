@@ -2,7 +2,7 @@
   <div class="list_detail">
     <avatarUpload
       style="margin: 0rem 5rem 3rem"
-      @provideRaw="sendPic"
+      @getAva="getAva"
     ></avatarUpload>
     <el-form label-width="5rem" :model="selectList" :rules="rules">
       <el-row>
@@ -76,15 +76,10 @@ export default {
       selectList: {
         name: '',
         author: '',
-        createdate: '',
-        unquote: '',
         detail: '',
         tag_id: [],
         cate_id: [],
-        traffic: '',
-        id: '',
-        raw: '',
-        article_avatar: ''
+        article_avatar: null
       },
       showEditor: false,
       rules: {
@@ -108,7 +103,6 @@ export default {
     ...mapActions(['article/addArticle', 'user/reAvatar']),
     // 关闭dialog
     cancel () {
-      this.raw = ''
       this.$emit('cancel')
       this.selectList.tag_id = null
     },
@@ -121,13 +115,18 @@ export default {
       }
       this.showEditor = true
     },
-    add () {
+    getAva (ava) {
+      this.selectList.article_avatar = JSON.stringify(ava)
+    },
+    async add () {
       if (!this.selectList.detail) {
         return this.$message({
           message: '内容不能为空',
           type: 'warning'
         })
       }
+
+      // 计算标签的类别和数量，并赋值到对象中
       let arr = []
       this.selectList.tag_id.forEach((v) => {
         this.allTags.forEach((m) => {
@@ -140,6 +139,8 @@ export default {
         arr = null
       }
       this.selectList.tag_id = JSON.stringify(arr)
+
+      // 计算分类的类别和数量，并赋值到对象中
       let arr2 = []
       this.selectList.cate_id.forEach((v) => {
         this.allCates.forEach((m) => {
@@ -152,10 +153,17 @@ export default {
         arr2 = null
       }
       this.selectList.cate_id = JSON.stringify(arr2)
-      this['article/addArticle'](this.selectList)
-      location.reload()
-      this.cancel()
-      this.showEditor = false
+      const res = await this['article/addArticle'](this.selectList)
+      if (!res.data.status) {
+        this.$message({
+          message: '更新文章成功',
+          type: 'success'
+        })
+        // 刷新页面
+        location.reload()
+        this.cancel()
+        this.showEditor = false
+      }
     },
     sendPic (raw) {
       this.selectList.article_avatar = raw
