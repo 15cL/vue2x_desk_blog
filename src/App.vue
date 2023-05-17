@@ -6,7 +6,7 @@
       :navs="navs"
     ></NavHeader>
     <div class="container">
-      <router-view />
+      <router-view/>
     </div>
     <footer class="foot_me">这是属于小五的个人博客BLog © 2022.11.21 Sio</footer>
   </div>

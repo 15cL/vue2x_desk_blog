@@ -12,6 +12,7 @@
         </transition>
         <div class="art_list">
           <ArticleList
+          ref="artDom"
             v-if="$route.meta.article && articles.length"
             :articles="articles"
             :cates="cates"
@@ -69,8 +70,8 @@ export default {
       signature: '保佑身边的人都天天开心',
       cates: '',
       tags: '',
-      articles: '',
-      hotArticles: '',
+      articles: JSON.parse(window.sessionStorage.getItem('articles')),
+      hotArticles: JSON.parse(window.sessionStorage.getItem('hotArticles')),
       refresh: true,
       msgList: ''
     }
@@ -94,6 +95,7 @@ export default {
         this.msgList = await this.$store.dispatch('msg/getAllMsg')
       }
     }
+
   },
   async created () {
     const _this = this
@@ -103,9 +105,15 @@ export default {
 
       // 获取标签文章数目
       _this.tags = await _this.getTagArticle()
-      _this.articles = await _this.getArticles()
-      _this.hotArticles = await _this.getHotArticle()
     })
+  },
+  mounted () {
+    if (!this.$refs.artDom && this.$route.meta.article) {
+      if (!location.href.includes('##')) {
+        location.href += '##'
+        location.reload()
+      }
+    }
   },
   methods: {
     // 获取分类文章
@@ -132,16 +140,6 @@ export default {
         ooo.push(v)
       })
       return ooo
-    },
-
-    // 获取所有文章
-    async getArticles () {
-      return JSON.parse(window.sessionStorage.getItem('articles'))
-    },
-
-    // 获取热门文章
-    async getHotArticle () {
-      return JSON.parse(window.sessionStorage.getItem('hotArticles'))
     }
   }
 }
@@ -188,15 +186,6 @@ export default {
           color: rgba(156, 163, 175, 1);
         }
       }
-      // .user-leave-active{
-      //   animation: fade 0.5s;
-      // }
-      // @keyframes fade {
-      //   100%{
-      //     transform: translateY(-200px);
-      //     opacity: 0;
-      //   }
-      // }
     }
   }
 }
