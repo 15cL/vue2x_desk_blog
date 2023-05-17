@@ -13,6 +13,7 @@
                 <el-input
                   v-model="msgList.nickName"
                   placeholder="请输入昵称，非必填"
+                  :disabled="$store.state.drawerFlag"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -21,6 +22,7 @@
                 <el-input
                   v-model="msgList.email"
                   placeholder="请输入邮箱，非必填"
+                  :disabled="$store.state.drawerFlag"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -31,11 +33,17 @@
               rows="5"
               v-model="msgList.detail"
               placeholder="输入想说的话"
+              :disabled="$store.state.drawerFlag"
             ></el-input>
           </el-form-item>
           <el-row>
-            <el-form-item style="text-align:right">
-              <el-button type="primary" size="small" @click="confirm_all(msgList)">发送</el-button>
+            <el-form-item style="text-align: right">
+              <el-button
+                type="primary"
+                size="small"
+                @click="confirm_all(msgList)"
+                >发送</el-button
+              >
               <el-button size="small" @click="qx_all">取消</el-button>
             </el-form-item>
           </el-row>
@@ -91,7 +99,7 @@ export default {
   section {
     margin-top: 1rem;
     .msg_in {
-     ::v-deep .el-textarea .el-textarea__inner {
+      ::v-deep .el-textarea .el-textarea__inner {
         resize: none;
       }
     }

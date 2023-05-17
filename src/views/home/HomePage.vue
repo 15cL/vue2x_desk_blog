@@ -7,18 +7,18 @@
             class="banner"
             v-if="$route.path == '/home' || $route.path == '/'"
           >
-            <img src="../../assets/pic/banner1.jpg" />
+            <img src="https://s1.ax1x.com/2023/05/17/p9R569U.jpg" />
           </div>
         </transition>
         <div class="art_list">
           <ArticleList
-            v-if="$route.meta.article"
+            v-if="$route.meta.article && articles.length"
             :articles="articles"
             :cates="cates"
             :tags="tags"
           ></ArticleList>
           <AboutPage v-else-if="$route.meta.about"></AboutPage>
-            <MsgList v-else-if='$route.meta.msg' :msgList="msgList"></MsgList>
+          <MsgList v-else-if="$route.meta.msg" :msgList="msgList"></MsgList>
           <router-view v-if="refresh" />
         </div>
       </div>
@@ -26,16 +26,17 @@
         <transition name="user">
           <div class="user" v-if="$route.meta.user">
             <img
-              src="../../assets/pic/user_pic.jpg"
+              src="https://s1.ax1x.com/2023/05/17/p9RxeaD.jpg"
               style="width: 8rem; height: 8rem; border-radius: 0.3rem"
             />
             <h2>{{ userName }}</h2>
             <p>{{ signature }}</p>
           </div>
         </transition>
-        <cate-list :cates="cates"></cate-list>
-        <tag-list :tags="tags" v-if="!$route.meta.about"></tag-list>
+        <cate-list :cates="cates" v-if="cates"></cate-list>
+        <tag-list :tags="tags" v-if="!$route.meta.about && tags"></tag-list>
         <HotArticle
+          v-if="hotArticles"
           :hots="hotArticles"
           :cates="cates"
           :tags="tags"
@@ -66,12 +67,12 @@ export default {
     return {
       userName: '15',
       signature: '保佑身边的人都天天开心',
-      cates: [],
-      tags: [],
-      articles: [],
-      hotArticles: [],
+      cates: '',
+      tags: '',
+      articles: '',
+      hotArticles: '',
       refresh: true,
-      msgList: []
+      msgList: ''
     }
   },
   watch: {
@@ -95,13 +96,16 @@ export default {
     }
   },
   async created () {
-    // 获取分类文章数目
-    this.cates = await this.getCateArticle()
+    const _this = this
+    _this.$nextTick(async () => {
+      // 获取分类文章数目
+      _this.cates = await _this.getCateArticle()
 
-    // 获取标签文章数目
-    this.tags = await this.getTagArticle()
-    this.articles = await this.getArticles()
-    this.hotArticles = await this.getHotArticle()
+      // 获取标签文章数目
+      _this.tags = await _this.getTagArticle()
+      _this.articles = await _this.getArticles()
+      _this.hotArticles = await _this.getHotArticle()
+    })
   },
   methods: {
     // 获取分类文章
@@ -132,14 +136,12 @@ export default {
 
     // 获取所有文章
     async getArticles () {
-      const res = await this.$store.dispatch('article/getArticles')
-      return res.data.data
+      return JSON.parse(window.sessionStorage.getItem('articles'))
     },
 
     // 获取热门文章
     async getHotArticle () {
-      const res = await this.$store.dispatch('article/getHotArticles')
-      return res.data.data
+      return JSON.parse(window.sessionStorage.getItem('hotArticles'))
     }
   }
 }
@@ -152,6 +154,7 @@ export default {
     justify-content: space-between;
     .col_fir {
       flex: 1;
+      width: 100vw;
       .banner {
         background-color: white;
         padding: 0.3rem;

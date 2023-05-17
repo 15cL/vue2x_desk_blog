@@ -51,7 +51,7 @@
       }
     }
   }
-  footer {
+  .foot_me {
     padding: 3rem 0;
   }
 }
@@ -99,8 +99,15 @@
       }
     }
   }
-  footer {
+  .foot_me {
     padding: 2rem 0;
+  }
+
+  .art_detail{
+    width: 100vw;
+  }
+  .tag_box{
+    font-size: 0.6rem;
   }
 }
 

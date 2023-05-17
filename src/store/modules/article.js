@@ -3,7 +3,8 @@ import {
   getArticles,
   getHotArticles,
   getSearchAticles,
-  insertTraffic
+  insertTraffic,
+  getAvatar
 } from '@/api/article'
 
 const state = {}
@@ -33,11 +34,14 @@ const actions = {
 
   // 计算文章流量
   async insertTraffic (context, id) {
-    console.log('id')
     return await insertTraffic(id)
+  },
+
+  // 获取文章大图
+  async getAvatar (context, id) {
+    return await getAvatar(id)
   }
 }
-
 export default {
   namespaced: true,
   state,

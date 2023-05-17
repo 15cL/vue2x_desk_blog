@@ -1,7 +1,7 @@
 <template>
   <div class="art_detail">
     <header>
-      <h1>{{ article.name }}</h1>
+      <h2>{{ article.name }}</h2>
       <div class="other">
         <span
           ><i class="iconfont icon-caidan"></i>
@@ -17,7 +17,9 @@
           {{ formateTime(article.createdate) }}</span
         >
         <span><i class="iconfont icon-yanjing"></i> {{ article.traffic }}</span>
-        <span><i class="iconfont icon-pinglun"></i> {{ msgList.length||0 }}</span>
+        <span
+          ><i class="iconfont icon-pinglun"></i> {{ msgList.length || 0 }}</span
+        >
       </div>
       <div class="content">
         <div v-html="text" class="markdown-body"></div>
@@ -84,12 +86,10 @@ export default {
     this.lastArt = articles[index - 1] || ''
     this.nextArt = articles[index + 1] || ''
 
-    // console.log(this.article)
     // 解析markdown文本
     this.text = marked.parse(this.article.detail)
 
     // 获取文章下留言
-    console.log(this.article)
     await this.getArticleMsg(this.article.id)
 
     window.scrollTo({ top: 0 })
@@ -144,19 +144,21 @@ export default {
 <style lang="scss" scoped>
 .art_detail {
   header {
-    width: 45.9063rem;
     background-color: white;
     padding: 1rem;
     border-radius: 0.2rem;
     .other {
+      display: flex;
+      align-items: center;
       padding: 1rem 0;
       border-bottom: 0.0625rem solid gainsboro;
+
       span {
         margin-right: 0.6rem;
-        font-size: 0.6rem;
+        // font-size: 0.6rem;
         color: rgb(170, 170, 170);
         i {
-          width: 0.6rem;
+          font-size: 0.6 !important ;
         }
       }
     }

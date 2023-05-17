@@ -55,10 +55,12 @@ export default {
       margin: 1rem 0;
       font-size: 0.8rem;
       label {
-        flex: 1;
+        flex: 0 0 92%;
         font-size: 0.9rem;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
         overflow: hidden;
-        text-overflow: ellipsis;
         cursor: pointer;
       }
       & :hover {

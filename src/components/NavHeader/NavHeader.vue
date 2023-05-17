@@ -22,20 +22,22 @@
         <i
           class="iconfont icon-caidan"
           v-if="!drawer"
-          @click="drawer = true"
+          @click="reDrawer"
           style="cursor: pointer"
         ></i>
-        <i class="iconfont icon-chahao" v-else @click="drawer = false"></i>
+        <i class="iconfont icon-chahao" v-else @click="reDrawer"></i>
       </div>
       <div class="search">
         <div class="box">
           <form action="">
-            <input v-model="info" type="text" placeholder="搜索内容" @keyup.enter="searchRes(info)"/>
+            <input
+              v-model="info"
+              type="text"
+              placeholder="搜索内容"
+              @keyup.enter="searchRes(info)"
+            />
           </form>
-          <button
-            class="serach_btn"
-            @click="searchRes(info)"
-          >
+          <button class="serach_btn" @click="searchRes(info)">
             <i class="iconfont icon-sousuo"></i>
           </button>
         </div>
@@ -58,20 +60,42 @@ export default {
     HomeDrawer
   },
   props: ['iconName', 'icon_name', 'navs'],
+  watch: {
+    // 监听drawer遮罩层是否打开，并禁止页面滚动
+    drawer (n, o) {
+      if (n) {
+        document.documentElement.style.overflow = 'hidden'
+        document.body.style.overflow = 'hidden'
+      }
+      if (o) {
+        window.scrollY = 0
+        document.documentElement.style.overflow = 'visible'
+        document.body.style.overflow = 'visible'
+      }
+    }
+  },
   data () {
     return {
-      drawer: '',
       info: ''
+    }
+  },
+  computed: {
+    drawer () {
+      return this.$store.state.drawerFlag
     }
   },
   methods: {
     ...mapActions(['article/getSearchAticles']),
+    reDrawer () {
+      this.$store.commit('reDrawer')
+    },
     exit () {
-      this.drawer = false
+      this.reDrawer()
     },
 
     // 跳转页面
     tapTo (name) {
+      this.$store.commit('stopDrawer')
       this.$router.push({ name })
     },
 

@@ -25,7 +25,6 @@ export default {
   },
   async created () {
     this.tag = JSON.parse(decodeURIComponent(this.$route.query.tag))
-    console.log(this.tag)
     this.articles = await this.getArtList(this.tag.id)
   },
   methods: {

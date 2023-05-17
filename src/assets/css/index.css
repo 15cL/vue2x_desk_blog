@@ -41,7 +41,7 @@
     width: 13rem;
     height: 8.125rem;
   }
-  footer {
+  .foot_me {
     padding: 3rem 0;
   }
 }
@@ -81,8 +81,14 @@
   ul li .pic_content img {
     width: 9rem;
   }
-  footer {
+  .foot_me {
     padding: 2rem 0;
+  }
+  .art_detail {
+    width: 100vw;
+  }
+  .tag_box {
+    font-size: 0.6rem;
   }
 }
 

@@ -1,12 +1,12 @@
 <template>
-  <div class="home_drawer" @click.self="exit">
+  <div class="home_drawer" @click="exit">
     <div id="box">
       <div class="search">
-        <div class="box">
+        <div class="box" @click.stop="focus">
           <form action="">
-            <input type="text" placeholder="搜索内容" />
+            <input ref="inputB" v-model="key" type="text" placeholder="搜索内容" />
           </form>
-          <button class="serach_btn">
+          <button class="serach_btn" @click="tapToSearch(key)">
             <i class="iconfont icon-sousuo"></i>
           </button>
         </div>
@@ -25,9 +25,32 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   props: ['navs'],
+  data () {
+    return {
+      key: ''
+    }
+  },
   methods: {
+    ...mapActions(['article/getSearchAticles']),
+    async tapToSearch (info) {
+      const res = await this['article/getSearchAticles'](info)
+      this.$router.push({
+        path: '/blog/search',
+        query: {
+          info: encodeURIComponent(
+            JSON.stringify({ list: res.data.data, keyword: info })
+          )
+        }
+      })
+      this.info = ''
+      this.exit()
+    },
+    focus () {
+      this.$refs.inputB.focus()
+    },
     exit () {
       this.$emit('exit')
     },

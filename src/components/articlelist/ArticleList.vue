@@ -2,9 +2,10 @@
   <div class="article_list">
     <ul>
       <li
-        v-for="article in articles"
+        ref="artLi"
+        v-for="article in arr"
         :key="article.id"
-        @click="tapToDetail(article)"
+        @click="!$store.state.drawerFlag && tapToDetail(article)"
       >
         <div class="detail">
           <h2>{{ article.name }}</h2>
@@ -15,7 +16,7 @@
                 style="font-size: 0.8rem; margin-left: 0.2rem"
                 v-for="(item, index) in JSON.parse(article.cate_id)"
                 :key="index"
-                >{{ getName('cates', item) }}</i
+                >{{ getName("cates", item) }}</i
               ></span
             >
             <span
@@ -25,19 +26,21 @@
             <span
               ><i class="iconfont icon-yanjing"></i> {{ article.traffic }}</span
             >
-            <span><i class="iconfont icon-pinglun"></i> {{ article.msg_num }}</span>
+            <span
+              ><i class="iconfont icon-pinglun"></i> {{ article.msg_num }}</span
+            >
           </div>
           <p>{{ article.detail }}</p>
           <div class="tag_box">
             <span
               v-for="(item, index) in JSON.parse(article.tag_id)"
               :key="index"
-              >{{ getName('tags', item) }}</span
+              >{{ getName("tags", item) }}</span
             >
           </div>
         </div>
         <div class="pic_content">
-          <img src="../../assets/pic/banner1.jpg" lazy />
+          <img :src="article.article_avatar" v-imagerror="imgUrl" lazy />
         </div>
       </li>
     </ul>
@@ -48,7 +51,7 @@
         :page-size="10"
         :page-count="10"
         layout="prev, pager, next"
-        :total="articles.length"
+        :total="arr.length"
         hide-on-single-page
       ></el-pagination>
     </div>
@@ -58,16 +61,47 @@
 <script>
 import { getName } from '@/utills/index'
 import { formateTime } from '@/utills/formate'
+import { mapActions } from 'vuex'
 export default {
   props: ['articles'],
   data () {
     return {
       isBackground: true,
       tags: JSON.parse(window.sessionStorage.getItem('tags')),
-      cates: JSON.parse(window.sessionStorage.getItem('cates'))
+      cates: JSON.parse(window.sessionStorage.getItem('cates')),
+      arr: JSON.parse(window.sessionStorage.getItem('articles')) || [],
+      imgUrl: 'https://s1.ax1x.com/2023/05/17/p9R569U.jpg'
     }
   },
+  watch: {
+    flag (n, o) {
+      if (n) {
+        const arr = this.$refs.artLi
+        arr.forEach((element) => {
+          element.style = 'pointer-events:none'
+        })
+      } else {
+        const arr = this.$refs.artLi
+        arr.forEach((element) => {
+          element.style = 'pointer-events:auto'
+        })
+      }
+    },
+    articles (n, o) {
+      n && this.getAvas(n)
+    }
+  },
+  computed: {
+    flag () {
+      return this.$store.state.drawerFlag
+    }
+  },
+  created () {
+    this.getAvas(this.articles)
+  },
   methods: {
+    ...mapActions(['article/getAvatar']),
+
     // 格式化时间
     formateTime (time) {
       return formateTime(time)
@@ -76,6 +110,27 @@ export default {
     // 获取标签名或类名
     getName (arr, id) {
       return getName(arr, id)
+    },
+    getAvas (articles) {
+      const picArr = []
+      if (!articles) {
+        return
+      }
+      articles.forEach((e) => {
+        picArr.push(this['article/getAvatar']({ id: e.id }))
+      })
+
+      // 异步并行函数
+      Promise.all(picArr).then((res) => this.switchPic(articles, res))
+    },
+    switchPic (articles, res) {
+      for (let i = 0; i < articles.length; i++) {
+        articles[i].article_avatar =
+          'data:image/png;base64,' + res[i].data.baseUrl
+      }
+      this.arr = articles
+      window.sessionStorage.removeItem(articles)
+      window.sessionStorage.setItem('articles', JSON.stringify(articles))
     },
 
     // 跳转详情页
@@ -93,6 +148,7 @@ export default {
         return error
       } finally {
         this.$store.dispatch('article/insertTraffic', article.id)
+        window.scrollY = 0
       }
     }
   }
@@ -121,7 +177,14 @@ export default {
       --webkit-animation: upper 1s;
       cursor: pointer;
       .detail {
-        flex: 2.5;
+        flex: 1;
+        width: 0;
+        h2 {
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+        }
         .other {
           margin: 1rem 0;
           span {
@@ -142,15 +205,19 @@ export default {
           span {
             padding: 0.1rem 0.6rem;
             border-radius: 1rem;
-            font-size: 0.9rem;
+
             color: rgb(156, 163, 175, 1);
             background-color: rgb(237, 237, 237);
           }
         }
       }
       .pic_content {
-        flex: 1;
+        flex: 0 0 25%;
         text-align: right;
+        img {
+          width: 9rem;
+          height: 5.625rem;
+        }
       }
     }
     @keyframes upper {

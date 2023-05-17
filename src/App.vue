@@ -8,7 +8,7 @@
     <div class="container">
       <router-view />
     </div>
-    <footer>这是属于小五的个人博客BLog © 2022.11.21 Sio</footer>
+    <footer class="foot_me">这是属于小五的个人博客BLog © 2022.11.21 Sio</footer>
   </div>
 </template>
 
@@ -31,9 +31,14 @@ export default {
 
     // 存储tags
     this.getTags()
+
+    // 存储articles
+    this.getArticles()
+
+    // 存储hotArticles
+    this.getHotArticle()
   },
   methods: {
-
     // 获取分类列表
     async getCates () {
       const res = await this.$store.dispatch('cate/getCates')
@@ -44,8 +49,22 @@ export default {
     async getTags () {
       const res = await this.$store.dispatch('tag/getTags')
       window.sessionStorage.setItem('tags', JSON.stringify(res.data.data))
-    }
+    },
 
+    // 获取所有文章
+    async getArticles () {
+      const res = await this.$store.dispatch('article/getArticles')
+      window.sessionStorage.setItem('articles', JSON.stringify(res.data.data))
+    },
+
+    // 获取热门文章
+    async getHotArticle () {
+      const res = await this.$store.dispatch('article/getHotArticles')
+      window.sessionStorage.setItem(
+        'hotArticles',
+        JSON.stringify(res.data.data)
+      )
+    }
   }
 }
 </script>
@@ -66,7 +85,7 @@ export default {
       margin: 0.6rem auto;
     }
   }
-  footer {
+  .foot_me {
     @media screen and (min-width: 640px) {
       marginp-top: 1.5rem;
     }

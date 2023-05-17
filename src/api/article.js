@@ -41,10 +41,17 @@ export function getArticleMsg (id) {
 
 // 计算文章流量
 export function insertTraffic (id) {
-  console.log('idddd', id)
   return request({
     url: '/article/traffic',
     data: { id },
     method: 'post'
+  })
+}
+
+export function getAvatar (params) {
+  return request({
+    url: '/article/getAvatar',
+    params,
+    method: 'get'
   })
 }

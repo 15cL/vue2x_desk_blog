@@ -1,5 +1,10 @@
 const { defineConfig } = require('@vue/cli-service')
+
+const CompressionPlugin = require('compression-webpack-plugin')
+
 module.exports = defineConfig({
+  publicPath: './',
+  assetsDir: 'static',
   transpileDependencies: true,
   configureWebpack: {
     externals: {
@@ -10,10 +15,31 @@ module.exports = defineConfig({
       'element-ui': 'ELEMENT' // 需要纯大写
     }
   },
+  chainWebpack: config => {
+    config.plugin('html').tap(args => {
+      args[0].title = '这里是小五的博客！'
+      return args
+    })
+
+    // 开启Gzip
+    if (process.env.ENV === 'production') {
+      return {
+        plugins: [
+          new CompressionPlugin({
+            algorithm: 'gzip',
+            test: /\.(js|css)$/, // 匹配文件名
+            threshold: 10240, // 对超过10k的数据压缩
+            deleteOriginalAssets: false, // 不删除源文件
+            minRatio: 0.8 // 压缩比
+          })
+        ]
+      }
+    }
+  },
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://39.105.171.221',
+        target: 'http://localhost:3000/',
         changeOrigin: true,
         pathRewrite: { '^/api': '' }
       }

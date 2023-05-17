@@ -38,7 +38,6 @@ export default {
     flex-wrap: wrap;
     font-size: 0.1rem;
     div {
-      height: 4.5175rem;
       label {
         display: flex;
         margin: 1rem 0.6rem 0 0;

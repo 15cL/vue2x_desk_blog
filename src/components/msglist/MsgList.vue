@@ -10,7 +10,7 @@
           <li v-for="msg of msgList" :key="msg.id">
             <div class="title">
               <img
-                src="../../assets/pic/other_user.png"
+                src="https://s1.ax1x.com/2023/05/17/p9RxQxI.png"
                 style="width: 2.6rem"
               />
               <div class="guest">

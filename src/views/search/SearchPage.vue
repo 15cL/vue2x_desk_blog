@@ -44,14 +44,13 @@ export default {
 
 <style lang="scss" scoped>
 .search_page {
-  @media screen and (min-width: 640px) {
-    width: 45.9063rem;
-  }
   @media screen and (max-width: 950px) {
     width: 100%;
   }
   @media screen and (max-width: 640px) {
+    width: 100vw;
     margin-top: 0.6rem;
+    overflow-x:hidden
   }
   header {
     display: flex;
