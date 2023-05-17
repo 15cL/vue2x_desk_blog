@@ -73,8 +73,8 @@ export default {
     return {
       eye: false,
       loginForm: {
-        username: 'adm123',
-        password: '123456'
+        username: '',
+        password: ''
       },
       rules: {
         username: [{ validator: validateUsername, trigger: 'blur' }],
