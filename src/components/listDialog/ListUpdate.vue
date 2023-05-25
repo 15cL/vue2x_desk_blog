@@ -120,14 +120,18 @@ export default {
     okDeatail () {
       this.showEditor = false
     },
-
+    // 获取修改的图片
     getAva (ava) {
       this.selectList.article_avatar = JSON.stringify(ava)
     },
+
+    // 获取原来文章的图片
     async getArtAvatar () {
       const res = await this['article/getAvatar']({ id: this.list.id })
       this.imgUrl = 'data:image/png;base64,' + res
     },
+
+    // 获取默认选中的分类
     getDefaultCate () {
       this.allCates = JSON.parse(this.cates) // 列出所有的tag
       const Idarr = JSON.parse(this.selectList.cate_id) // 获取已选中的id
@@ -143,6 +147,7 @@ export default {
       }
       this.selectList.cate_id = arr
     },
+
     // 获取默认选中的标签
     getDefaultTag () {
       this.allTags = JSON.parse(this.tags) // 列出所有的tag
