@@ -12,8 +12,8 @@
         </transition>
         <div class="art_list">
           <ArticleList
-          ref="artDom"
-            v-if="$route.meta.article && articles.length"
+            ref="artDom"
+            v-if="$route.meta.article && articles.length && tags"
             :articles="articles"
             :cates="cates"
             :tags="tags"
@@ -70,8 +70,8 @@ export default {
       signature: '保佑身边的人都天天开心',
       cates: '',
       tags: '',
-      articles: JSON.parse(window.sessionStorage.getItem('articles')),
-      hotArticles: JSON.parse(window.sessionStorage.getItem('hotArticles')),
+      articles: [],
+      hotArticles: [],
       refresh: true,
       msgList: ''
     }
@@ -95,50 +95,83 @@ export default {
         this.msgList = await this.$store.dispatch('msg/getAllMsg')
       }
     }
-
   },
   async created () {
-    const _this = this
-    _this.$nextTick(async () => {
-      // 获取分类文章数目
-      _this.cates = await _this.getCateArticle()
+    // 存储articles
+    await this.getArticles()
 
-      // 获取标签文章数目
-      _this.tags = await _this.getTagArticle()
-    })
-  },
-  mounted () {
-    if (!this.$refs.artDom && this.$route.meta.article) {
-      if (!location.href.includes('##')) {
-        location.href += '##'
-        location.reload()
-      }
-    }
+    // 存储hotArticles
+    await this.getHotArticle()
+
+    this.cates = await this.getCateArticle()
+
+    // 获取标签文章数目
+    this.tags = await this.getTagArticle()
   },
   methods: {
+    // 获取所有文章
+    async getArticles () {
+      let res = ''
+      try {
+        res = await this.$store.dispatch('article/getArticles')
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.articles = res.data.data
+        window.sessionStorage.setItem(
+          'articles',
+          JSON.stringify(res.data.data)
+        )
+      }
+    },
+
+    // 获取热门文章
+    async getHotArticle () {
+      let res = ''
+      try {
+        res = await this.$store.dispatch('article/getHotArticles')
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.hotArticles = res.data.data
+        window.sessionStorage.setItem(
+          'hotArticles',
+          JSON.stringify(res.data.data)
+        )
+      }
+    },
+
     // 获取分类文章
     async getCateArticle () {
-      const cates = JSON.parse(window.sessionStorage.getItem('cates'))
+      const res = await this.$store.dispatch('cate/getCates')
+      window.sessionStorage.setItem('cates', JSON.stringify(res.data.data))
+      const cates = res.data.data || []
       const yyy = []
 
-      cates.forEach(async (v) => {
-        const res = await this.$store.dispatch('cate/getCateArticle', v.id)
-        v.num = res.data.data ? res.data.data.length : 0
-        yyy.push(v)
-      })
+      if (cates) {
+        cates.forEach(async (v) => {
+          const res = await this.$store.dispatch('cate/getCateArticle', v.id)
+          v.num = res.data.data ? res.data.data.length : 0
+          yyy.push(v)
+        })
+      }
       return yyy
     },
 
     // 获取标签文章
     async getTagArticle () {
-      const tags = JSON.parse(window.sessionStorage.getItem('tags'))
+      const res = await this.$store.dispatch('tag/getTags')
+      window.sessionStorage.setItem('tags', JSON.stringify(res.data.data))
+      const tags = res.data.data || []
       const ooo = []
+      if (tags) {
+        tags.forEach(async (v) => {
+          const res = await this.$store.dispatch('tag/getTagArticle', v.id)
+          v.num = res.data.data ? res.data.data.length : 0
+          ooo.push(v)
+        })
+      }
 
-      tags.forEach(async (v) => {
-        const res = await this.$store.dispatch('tag/getTagArticle', v.id)
-        v.num = res.data.data ? res.data.data.length : 0
-        ooo.push(v)
-      })
       return ooo
     }
   }

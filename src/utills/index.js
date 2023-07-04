@@ -29,10 +29,12 @@ export function getRandomColor () {
 export function getName (type, id) {
   const arr = JSON.parse(window.sessionStorage.getItem(type))
   let name = ''
-  arr.forEach((v, i) => {
-    if (id === v.id) {
-      name = arr[i].name
-    }
-  })
+  if (arr) {
+    arr.forEach((v, i) => {
+      if (id === v.id) {
+        name = arr[i].name
+      }
+    })
+  }
   return name
 }

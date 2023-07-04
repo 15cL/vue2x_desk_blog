@@ -3,7 +3,7 @@ const { defineConfig } = require('@vue/cli-service')
 const CompressionPlugin = require('compression-webpack-plugin')
 
 module.exports = defineConfig({
-  publicPath: './',
+  publicPath: '/',
   assetsDir: 'static',
   transpileDependencies: true,
   configureWebpack: {

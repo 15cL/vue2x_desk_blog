@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '',
-    component: () => import('@/views/home/HomePage.vue'),
+    component: () => import('../views/home/HomePage.vue'),
     meta: {
       user: true,
       article: true
@@ -15,7 +15,7 @@ const routes = [
   {
     path: '/home',
     name: '首页',
-    component: () => import('@/views/home/HomePage.vue'),
+    component: () => import('../views/home/HomePage.vue'),
     meta: {
       user: true,
       article: true
@@ -63,7 +63,7 @@ const routes = [
   {
     path: '/about',
     name: '关于',
-    component: () => import('@/views/home/HomePage.vue'),
+    component: () => import('../views/home/HomePage.vue'),
     meta: {
       user: true,
       about: true
@@ -72,7 +72,7 @@ const routes = [
   {
     path: '/msg',
     name: '留言',
-    component: () => import('@/views/home/HomePage.vue'),
+    component: () => import('../views/home/HomePage.vue'),
     meta: {
       msg: true
     }

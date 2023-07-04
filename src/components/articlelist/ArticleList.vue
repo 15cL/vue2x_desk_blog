@@ -77,14 +77,18 @@ export default {
     flag (n, o) {
       if (n) {
         const arr = this.$refs.artLi
-        arr.forEach((element) => {
-          element.style = 'pointer-events:none'
-        })
+        if (arr) {
+          arr.forEach((element) => {
+            element.style = 'pointer-events:none'
+          })
+        }
       } else {
         const arr = this.$refs.artLi
-        arr.forEach((element) => {
-          element.style = 'pointer-events:auto'
-        })
+        if (arr) {
+          arr.forEach((element) => {
+            element.style = 'pointer-events:auto'
+          })
+        }
       }
     },
     articles (n, o) {
@@ -116,9 +120,11 @@ export default {
       if (!articles) {
         return
       }
-      articles.forEach((e) => {
-        picArr.push(this['article/getAvatar']({ id: e.id }))
-      })
+      if (articles) {
+        articles.forEach((e) => {
+          picArr.push(this['article/getAvatar']({ id: e.id }))
+        })
+      }
 
       // 异步并行函数
       Promise.all(picArr).then((res) => this.switchPic(articles, res))

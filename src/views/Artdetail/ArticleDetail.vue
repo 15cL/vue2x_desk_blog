@@ -75,7 +75,7 @@ export default {
       text: '',
       lastArt: '',
       nextArt: '',
-      msgList: ''
+      msgList: []
     }
   },
   async created () {
