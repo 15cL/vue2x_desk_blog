@@ -30,7 +30,11 @@
       <el-row>
         <el-col>
           <el-form-item prop="detail" label="内容">
-            <el-input type="textarea" v-model="selectList.detail" @focus="openEditor"></el-input>
+            <el-input
+              type="textarea"
+              v-model="selectList.detail"
+              @focus="openEditor"
+            ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -193,13 +197,17 @@ export default {
           this.selectList.cate_id = JSON.stringify(cateId)
         }
       }
-      const res = await this['article/updateArticle'](this.selectList)
+      const list = this.selectList
+      if (this.selectList.article_avatar.includes('./public')) {
+        delete list.article_avatar
+      }
+      const res = await this['article/updateArticle'](list)
       if (!res.data.status) {
         this.$message({
           message: '更新文章成功',
           type: 'success'
         })
-        location.reload()
+        // location.reload()
       }
       this.$emit('cancel')
     }
