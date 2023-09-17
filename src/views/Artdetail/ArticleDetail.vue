@@ -18,7 +18,7 @@
         >
         <span><i class="iconfont icon-yanjing"></i> {{ article.traffic }}</span>
         <span
-          ><i class="iconfont icon-pinglun"></i> {{ msgList.length || 0 }}</span
+          ><i class="iconfont icon-pinglun"></i> {{ msgList?.length || 0 }}</span
         >
       </div>
       <div class="content">
@@ -82,6 +82,9 @@ export default {
     // 获取文章
     this.article = JSON.parse(decodeURIComponent(this.$route.query.article))
     const articles = await this.getArticles()
+    if (articles) {
+      this.$store.state.article.falg = true
+    }
     const index = articles.findIndex((v) => v.id === this.article.id)
     this.lastArt = articles[index - 1] || ''
     this.nextArt = articles[index + 1] || ''

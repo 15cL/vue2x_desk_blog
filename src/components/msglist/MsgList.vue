@@ -5,7 +5,7 @@
       博客评论
     </header>
     <section>
-      <div class="msg_all" v-if="msgList.length">
+      <div class="msg_all" v-if="msgList?.length">
         <ul>
           <li v-for="msg of msgList" :key="msg.id">
             <div class="title">

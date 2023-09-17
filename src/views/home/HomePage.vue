@@ -7,17 +7,22 @@
             class="banner"
             v-if="$route.path == '/home' || $route.path == '/'"
           >
-            <img src="https://s1.ax1x.com/2023/05/17/p9R569U.jpg" />
+            <img
+              src="https://www.toopic.cn/public/uploads/small/1694419565620169441956587.jpg"
+            />
           </div>
         </transition>
         <div class="art_list">
+          <Layout v-if="!articles.length"/>
+         <keep-alive  v-if="$route.meta.article && articles.length && tags">
           <ArticleList
             ref="artDom"
-            v-if="$route.meta.article && articles.length && tags"
             :articles="articles"
             :cates="cates"
             :tags="tags"
-          ></ArticleList>
+          >
+          </ArticleList>
+         </keep-alive>
           <AboutPage v-else-if="$route.meta.about"></AboutPage>
           <MsgList v-else-if="$route.meta.msg" :msgList="msgList"></MsgList>
           <router-view v-if="refresh" />
@@ -27,7 +32,7 @@
         <transition name="user">
           <div class="user" v-if="$route.meta.user">
             <img
-              src="https://s1.ax1x.com/2023/05/17/p9RxeaD.jpg"
+              src="https://img.wxcha.com/m00/54/ed/69d26be4a4ac700e27c2d9cf85472b8c.jpg"
               style="width: 8rem; height: 8rem; border-radius: 0.3rem"
             />
             <h2>{{ userName }}</h2>
@@ -54,7 +59,7 @@ import ArticleList from '@/components/articlelist/ArticleList.vue'
 import HotArticle from '@/components/hotarticle/HotArticle.vue'
 import AboutPage from '@/views/about/AboutPage.vue'
 import MsgList from '@/components/msglist/MsgList.vue'
-
+import Layout from '@/components/layout/layoutPage.vue'
 export default {
   components: {
     CateList,
@@ -62,7 +67,8 @@ export default {
     ArticleList,
     HotArticle,
     AboutPage,
-    MsgList
+    MsgList,
+    Layout
   },
   data () {
     return {
@@ -108,6 +114,7 @@ export default {
     // 获取标签文章数目
     this.tags = await this.getTagArticle()
   },
+
   methods: {
     // 获取所有文章
     async getArticles () {
@@ -115,7 +122,6 @@ export default {
       try {
         res = await this.$store.dispatch('article/getArticles')
       } catch (error) {
-        console.log(error)
       } finally {
         this.articles = res.data.data
         window.sessionStorage.setItem(

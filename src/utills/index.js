@@ -13,18 +13,6 @@ export function getRandomColor () {
     getRandomColor()
   }
 }
-/*
-[
-  {
-    id: 1,
-    name: '小明'
-  },
-  {
-    id: 2,
-    name: '小s'
-  }
-]
-*/
 
 export function getName (type, id) {
   const arr = JSON.parse(window.sessionStorage.getItem(type))

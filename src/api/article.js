@@ -2,9 +2,12 @@
 import request from '@/utills/request'
 
 // 获取所有文章
-export function getArticles () {
+export function getArticles (start) {
   return request({
     url: '/article/all',
+    params: {
+      start
+    },
     method: 'get'
   })
 }

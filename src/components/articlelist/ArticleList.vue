@@ -44,16 +44,17 @@
         </div>
       </li>
     </ul>
-    <div v-if="articles" style="text-align: center; padding: 1rem">
+    <div class="loading" ref="loading" v-if="loading">拼命加载中...</div>
+    <div class="pagina" v-else>
       <el-pagination
-        ref="el_pa"
-        :background="isBackground"
-        :page-size="10"
-        :page-count="10"
         layout="prev, pager, next"
-        :total="arr.length"
-        hide-on-single-page
-      ></el-pagination>
+        :total="50"
+        :current-page="currentpage"
+        :page-sizes="[5, 10, 50, 100]"
+        :page-size="pagesize"
+        @current-change="handleCurrentChange"
+      >
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -62,6 +63,7 @@
 import { getName } from '@/utills/index'
 import { formateTime } from '@/utills/formate'
 import { mapActions } from 'vuex'
+
 export default {
   props: ['articles'],
   data () {
@@ -70,7 +72,11 @@ export default {
       tags: JSON.parse(window.sessionStorage.getItem('tags')),
       cates: JSON.parse(window.sessionStorage.getItem('cates')),
       arr: JSON.parse(window.sessionStorage.getItem('articles')) || [],
-      imgUrl: 'https://s1.ax1x.com/2023/05/17/p9R569U.jpg'
+      imgUrl:
+        'https://cn.bing.com/images/search?q=%E9%94%99%E8%AF%AF%E5%9B%BE%E7%89%87&FORM=IQFRBA&id=E87F2415A6C4FD586902644900B7D54E3D9B2A5F',
+      loading: true,
+      currentpage: 1, // 当前所在页默认是第一页
+      pagesize: 10 // 每页显示多少行数据 默认设置为10
     }
   },
   watch: {
@@ -95,6 +101,7 @@ export default {
       n && this.getAvas(n)
     }
   },
+
   computed: {
     flag () {
       return this.$store.state.drawerFlag
@@ -103,9 +110,59 @@ export default {
   created () {
     this.getAvas(this.articles)
   },
+  updated () {
+    if (document.body.clientWidth > 750) {
+      this.loading = false
+    }
+    window.addEventListener(
+      'resize',
+      () => {
+        const wid = document.body.clientWidth
+        this.loading = !(wid > 750)
+      },
+      false
+    )
+
+    this.$nextTick(() => {
+      if (this.loading) {
+        const bc = new IntersectionObserver(async (el) => {
+          const { isIntersecting } = el[0]
+          if (isIntersecting) {
+            const index = this.arr.length
+            const {
+              data: { data }
+            } = await this.$store.dispatch('article/getArticles', index)
+            if (!data) {
+              this.$refs.loading.innerHTML = '无更多内容了'
+              bc.unobserve(this.$refs.loading)
+
+              setTimeout(() => {
+                this.loading = false
+              }, 1000)
+              return
+            }
+            // this.$emit('addList', data)
+            this.getAvas(data, this.arr)
+          }
+        })
+        bc.observe(this.$refs.loading)
+      }
+    })
+  },
+  //
   methods: {
     ...mapActions(['article/getAvatar']),
 
+    async handleCurrentChange (currentPage) {
+      this.currentPage = currentPage
+      const {
+        data: { data }
+      } = await this.$store.dispatch(
+        'article/getArticles',
+        (currentPage - 1) * 3
+      )
+      this.getAvas(data)
+    },
     // 格式化时间
     formateTime (time) {
       return formateTime(time)
@@ -115,7 +172,7 @@ export default {
     getName (arr, id) {
       return getName(arr, id)
     },
-    getAvas (articles) {
+    getAvas (articles, list = []) {
       const picArr = []
       if (!articles) {
         return
@@ -127,16 +184,17 @@ export default {
       }
 
       // 异步并行函数
-      Promise.all(picArr).then((res) => this.switchPic(articles, res))
+      Promise.all(picArr).then((res) => this.switchPic(articles, res, list))
     },
-    switchPic (articles, res) {
+    switchPic (articles, res, list) {
       for (let i = 0; i < articles.length; i++) {
         articles[i].article_avatar =
           'data:image/png;base64,' + res[i].data.baseUrl
       }
-      this.arr = articles
+
+      this.arr = [...list, ...articles]
       window.sessionStorage.removeItem(articles)
-      window.sessionStorage.setItem('articles', JSON.stringify(articles))
+      window.sessionStorage.setItem('articles', JSON.stringify(this.arr))
     },
 
     // 跳转详情页
@@ -161,6 +219,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.pagina{
+  text-align: center;
+}
+
 .article_list {
   @media screen and (min-width: 640px) {
     width: 47.9063rem;
@@ -234,6 +296,12 @@ export default {
         top: 0;
       }
     }
+  }
+  .loading {
+    height: 1.875rem;
+    line-height: 1.875rem;
+    background-color: rgb(153 146 146 / 80%);
+    text-align: center;
   }
 }
 </style>

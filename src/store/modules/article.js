@@ -7,14 +7,16 @@ import {
   getAvatar
 } from '@/api/article'
 
-const state = {}
+const state = {
+  flag: false
+}
 
 const mutations = {}
 
 const actions = {
   // 获取所有文章
-  async getArticles () {
-    return await getArticles()
+  async getArticles (context, start = 0) {
+    return await getArticles(start)
   },
 
   // 获取热门文章
