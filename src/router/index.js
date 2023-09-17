@@ -23,7 +23,7 @@ export const uRoutes = [
       },
       {
         path: 'cate',
-        name: 'list',
+        name: 'cate',
         component: () => import('@/views/article/cate/catePage.vue'),
         meta: {
           title: '文章分类'

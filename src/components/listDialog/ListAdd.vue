@@ -117,6 +117,7 @@ export default {
     },
     getAva (ava) {
       this.selectList.article_avatar = JSON.stringify(ava)
+      console.log(this.selectList)
     },
     async add () {
       if (!this.selectList.detail) {

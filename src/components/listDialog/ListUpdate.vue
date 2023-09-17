@@ -207,7 +207,7 @@ export default {
           message: '更新文章成功',
           type: 'success'
         })
-        // location.reload()
+        location.reload()
       }
       this.$emit('cancel')
     }

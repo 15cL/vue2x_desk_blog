@@ -5,7 +5,8 @@ import { getTimeStamp } from './authToken'
 import router from '@/router/index'
 
 const request = Axios.create({
-  baseURL: process.env.VUE_APP_BASE_API,
+  // baseURL: process.env.VUE_APP_BASE_API,
+  baseURL: 'http://39.105.171.221:3000/',
   timeout: 5000
   // withCredentials: true
 })

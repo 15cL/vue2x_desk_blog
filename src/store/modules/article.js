@@ -7,8 +7,8 @@ const mutations = {}
 const actions = {
 
   // 获取所有文章
-  async getArticleList () {
-    return await getArticleList()
+  async getArticleList (context, start = 0) {
+    return await getArticleList(start)
   },
 
   // 删除文章

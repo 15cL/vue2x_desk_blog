@@ -1,10 +1,13 @@
 import request from '@/until/request'
 
 // 获取所有文章
-export function getArticleList () {
+export function getArticleList (start) {
   return request({
     url: '/article/all',
-    method: 'get'
+    method: 'get',
+    params: {
+      start
+    }
   })
 }
 

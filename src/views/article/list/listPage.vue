@@ -46,6 +46,8 @@
             </template>
           </el-table-column>
         </el-table>
+        <el-pagination style="position: fixed; bottom:210px ; right: 200px;" background layout="prev, pager, next" @current-change="handleChange" :total="100">
+        </el-pagination>
         <el-dialog
           width="80rem"
           :title="title"
@@ -109,8 +111,11 @@ export default {
   },
   methods: {
     ...mapActions(['article/delArticle']),
-    async getList () {
-      const res = await this.$store.dispatch('article/getArticleList')
+    handleChange (e) {
+      this.getList(e)
+    },
+    async getList (e = null) {
+      const res = await this.$store.dispatch('article/getArticleList', e == null ? 0 : (e - 1) * 3)
       res.data.data.forEach((v) => {
         v.createdate = validaTime(v.createdate)
       })

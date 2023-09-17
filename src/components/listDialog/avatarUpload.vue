@@ -55,16 +55,17 @@ export default {
       return isJPG && isLt2M
     },
     getfile (file, fileList) {
+      // 格式校验
       const isFileType = this.beforeAvatarUpload(file)
       if (!isFileType) {
         fileList = []
         return
       }
-      this.imageUrl = file.url
       // this.imageUrl = file.raw // 这个就是咱们上传图片的二进制对象
       if (this.$route.path === '/home/article/list') {
         this.getBase64(file.raw).then((res) => {
           this.$emit('getAva', { name: file.name, url: res })
+          this.imageUrl = res
         })
       } else {
         this.getBase64(file.raw).then((res) => {

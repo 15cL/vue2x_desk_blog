@@ -13,16 +13,16 @@ import '@/assets/icon/iconfont.scss'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 
-import ELEMENT from 'element-ui'
-Vue.use(mavonEditor)
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
-// 解决el-dialog打开弹框时的抖动
-ELEMENT.Dialog.props.lockScroll.default = false
+Vue.use(ElementUI)
+Vue.use(mavonEditor)
 
 Vue.config.productionTip = false
 
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: (h) => h(App)
 }).$mount('#app')
