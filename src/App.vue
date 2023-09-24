@@ -25,8 +25,7 @@ export default {
       navs: ['首页', '博客', '留言', '关于']
     }
   },
-  created () {
-  },
+  created () {},
   methods: {}
 }
 </script>

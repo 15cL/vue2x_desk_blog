@@ -2,7 +2,7 @@
 import axios from 'axios'
 
 const request = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API,
+  baseURL: 'http://39.105.171.221:3000/',
   timeout: 5000
 })
 

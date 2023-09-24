@@ -13,16 +13,16 @@
           </div>
         </transition>
         <div class="art_list">
-          <Layout v-if="!articles.length"/>
-         <keep-alive  v-if="$route.meta.article && articles.length && tags">
+          <Layout v-if="!articles.length" />
           <ArticleList
+            v-if="$route.meta.article && articles.length && tags && refreshA"
             ref="artDom"
             :articles="articles"
             :cates="cates"
             :tags="tags"
+            @refresh="refreshArt"
           >
           </ArticleList>
-         </keep-alive>
           <AboutPage v-else-if="$route.meta.about"></AboutPage>
           <MsgList v-else-if="$route.meta.msg" :msgList="msgList"></MsgList>
           <router-view v-if="refresh" />
@@ -79,11 +79,16 @@ export default {
       articles: [],
       hotArticles: [],
       refresh: true,
-      msgList: ''
+      msgList: '',
+      ok: true,
+      refreshA: true
     }
   },
   watch: {
     async $route (to, from) {
+      if (to.path === '/') {
+        this.ok = !this.ok
+      }
       // 切换文章刷新
       if (
         to.query.article !== from.query.article ||
@@ -104,7 +109,8 @@ export default {
   },
   async created () {
     // 存储articles
-    await this.getArticles()
+    const articles = JSON.parse(window.sessionStorage.getItem('articles'))
+    this.articles = articles || (await this.getArticles())
 
     // 存储hotArticles
     await this.getHotArticle()
@@ -116,6 +122,15 @@ export default {
   },
 
   methods: {
+    async  refreshArt () {
+      this.refreshA = false
+      this.articles = await this.getArticles()
+
+      setTimeout(() => {
+        this.refreshA = true
+        scrollTo(0, 0)
+      }, 10)
+    },
     // 获取所有文章
     async getArticles () {
       let res = ''
@@ -123,12 +138,12 @@ export default {
         res = await this.$store.dispatch('article/getArticles')
       } catch (error) {
       } finally {
-        this.articles = res.data.data
         window.sessionStorage.setItem(
           'articles',
           JSON.stringify(res.data.data)
         )
       }
+      return res.data.data
     },
 
     // 获取热门文章

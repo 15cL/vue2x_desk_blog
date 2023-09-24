@@ -3,8 +3,8 @@
     <ul>
       <li
         ref="artLi"
-        v-for="article in arr"
-        :key="article.id"
+        v-for="(article, index) in arr"
+        :key="index"
         @click="!$store.state.drawerFlag && tapToDetail(article)"
       >
         <div class="detail">
@@ -44,8 +44,14 @@
         </div>
       </li>
     </ul>
-    <div class="loading" ref="loading" v-if="loading">拼命加载中...</div>
-    <div class="pagina" v-else>
+    <div
+      class="loading"
+      ref="loading"
+      v-if="loading && $store.state.article.loadingFlag"
+    >
+      拼命加载中...
+    </div>
+    <div class="pagina" v-if="!loading && $store.state.article.loadingFlag">
       <el-pagination
         layout="prev, pager, next"
         :total="50"
@@ -63,9 +69,9 @@
 import { getName } from '@/utills/index'
 import { formateTime } from '@/utills/formate'
 import { mapActions } from 'vuex'
-
 export default {
-  props: ['articles'],
+  props: ['articles', 'ok'],
+
   data () {
     return {
       isBackground: true,
@@ -75,8 +81,10 @@ export default {
       imgUrl:
         'https://cn.bing.com/images/search?q=%E9%94%99%E8%AF%AF%E5%9B%BE%E7%89%87&FORM=IQFRBA&id=E87F2415A6C4FD586902644900B7D54E3D9B2A5F',
       loading: true,
+      flagll: false,
       currentpage: 1, // 当前所在页默认是第一页
-      pagesize: 10 // 每页显示多少行数据 默认设置为10
+      pagesize: 10, // 每页显示多少行数据 默认设置为10
+      wid: ''
     }
   },
   watch: {
@@ -108,51 +116,109 @@ export default {
     }
   },
   created () {
-    this.getAvas(this.articles)
+    const arr = JSON.parse(window.sessionStorage.getItem('articles'))
+    if (!arr[0].article_avatar.match(/.\/public/g)) {
+      this.arr = arr
+    } else {
+      this.getAvas(this.articles)
+    }
+    this.flagll = !this.flagll
   },
-  updated () {
+  mounted () {
     if (document.body.clientWidth > 750) {
       this.loading = false
+    } else {
+      this.loading = true
+      this.alll = false
     }
     window.addEventListener(
       'resize',
       () => {
         const wid = document.body.clientWidth
         this.loading = !(wid > 750)
+
+        if (wid > 750 && this.wid < 750) {
+          window.sessionStorage.removeItem('articles')
+          this.$emit('refresh')
+        }
+        this.wid = wid
       },
       false
     )
 
-    this.$nextTick(() => {
-      if (this.loading) {
-        const bc = new IntersectionObserver(async (el) => {
-          const { isIntersecting } = el[0]
-          if (isIntersecting) {
-            const index = this.arr.length
-            const {
-              data: { data }
-            } = await this.$store.dispatch('article/getArticles', index)
-            if (!data) {
+    if (this.loading && this.$store.state.article.loadingFlag) {
+      const bc = new IntersectionObserver(async (el) => {
+        const { isIntersecting } = el[0]
+        if (isIntersecting) {
+          const index = this.arr.length
+          let data
+          try {
+            data = await this.$store.dispatch('article/getArticles', index)
+            if (!data.data.data) {
               this.$refs.loading.innerHTML = '无更多内容了'
               bc.unobserve(this.$refs.loading)
-
               setTimeout(() => {
                 this.loading = false
+                this.$store.commit('article/setLoadingFlag', false)
               }, 1000)
               return
             }
+          } catch (error) {
+          } finally {
             // this.$emit('addList', data)
-            this.getAvas(data, this.arr)
+
+            this.getAvas(data.data.data, this.arr)
           }
-        })
-        bc.observe(this.$refs.loading)
-      }
-    })
+        }
+      })
+      bc.observe(this.$refs.loading)
+    }
+  },
+  updated () {
+    window.addEventListener(
+      'resize',
+      () => {
+        const wid = document.body.clientWidth
+        this.loading = !(wid > 750)
+        if (wid > 750) {
+          window.sessionStorage.removeItem('articles')
+          this.$forceUpdate()
+        }
+      },
+      false
+    )
+    if (this.loading && this.$store.state.article.loadingFlag) {
+      const bc = new IntersectionObserver(async (el) => {
+        const { isIntersecting } = el[0]
+        if (isIntersecting) {
+          const index = this.arr.length
+          let data
+          try {
+            data = await this.$store.dispatch('article/getArticles', index)
+            if (!data.data.data) {
+              this.$refs.loading.innerHTML = '无更多内容了'
+              bc.unobserve(this.$refs.loading)
+              setTimeout(() => {
+                this.loading = false
+                this.$store.commit('article/setLoadingFlag', false)
+              }, 1000)
+              return
+            }
+          } catch (error) {
+          } finally {
+            this.getAvas(data.data.data, this.arr)
+          }
+        }
+      })
+      bc.observe(this.$refs.loading)
+    }
   },
   //
   methods: {
     ...mapActions(['article/getAvatar']),
+    loadingMore () {
 
+    },
     async handleCurrentChange (currentPage) {
       this.currentPage = currentPage
       const {
@@ -219,7 +285,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.pagina{
+.pagina {
   text-align: center;
 }
 

@@ -29,6 +29,7 @@ export default {}
   padding: 1rem;
   border-radius: 0.5rem;
   background-color: white;
+  margin-bottom: 9.8rem;
   p {
     font-size: 0.8rem;
   }

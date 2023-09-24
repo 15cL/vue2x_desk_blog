@@ -8,10 +8,15 @@ import {
 } from '@/api/article'
 
 const state = {
-  flag: false
+  flag: false,
+  loadingFlag: true
 }
 
-const mutations = {}
+const mutations = {
+  setLoadingFlag (state) {
+    state.loadingFlag = false
+  }
+}
 
 const actions = {
   // 获取所有文章
